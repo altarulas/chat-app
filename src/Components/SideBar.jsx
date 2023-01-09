@@ -1,7 +1,13 @@
+import Chats from "./Chats";
+import Navbar from "./Navbar";
+import Search from "./Search";
+
 const SideBar = () => {
     return (
         <div className="sidebar">
-            sidebar
+            <Navbar />
+            <Search />
+            <Chats />
         </div>
     );
 };
