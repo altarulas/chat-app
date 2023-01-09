@@ -1,37 +1,72 @@
-import { Button, TextField } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, db, storage } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-import { Link } from "react-router-dom";
+import Add from "../Images/add.png";
 
 const Register = () => {
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const displayName = e.target[0].value;
+        const email = e.target[1].value;
+        const password = e.target[2].value;
+        const file = e.target[3].files[0];
+
+        // Create user with auth
+        const response = await createUserWithEmailAndPassword(auth, email, password)
+
+        // Create storage for image
+        const storageRef = ref(storage, displayName);
+
+        // Upload func to upload image
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on(
+            (error) => {
+                console.log(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    await updateProfile(response.user, {
+                        displayName,
+                        photoURL: downloadURL,
+                    })
+                    await setDoc(doc(db, "users", response.user.uid), {
+                        uid: response.user.uid,
+                        displayName,
+                        email,
+                        photoURL: downloadURL,
+                    })
+
+                    await setDoc(doc(db, "userChats", response.user.uid), {})
+                    navigate("/home");
+                });
+            }
+        );
+
+    }
     return (
         <div className="formContainer">
             <div className="formWrapper">
-                <span className="logo">Register</span>
-                <form>
-                    <TextField id="standard-basic-1" label="name" variant="standard" />
-                    <TextField id="standard-basic-2" label="e-mail" variant="standard" />
-                    <TextField
-                        id="outlined-password-input-1"
-                        label="password"
-                        type="password"
-                        autoComplete="current-password"
-                        variant="standard"
-                    />
-                    <input required style={{ display: "none" }} type="file" id="file" />
-                    <label style={{ width: "150px" }} htmlFor="file">
-                        <img
-                            src="https://img.icons8.com/color-glass/48/null/guest-male.png"
-                            alt=""
-                        />
-                        <span style={{ fontSize: "17px", margin: "15px 0px" }}>
-                            Add an avatar
-                        </span>
+                <span className="logo">Lama Chat</span>
+                <span className="title">Register</span>
+                <form onSubmit={handleSubmit}>
+                    <input required type="text" placeholder="display name" />
+                    <input required type="email" placeholder="email" />
+                    <input required type="password" placeholder="password" />
+                    <input style={{ display: "none" }} type="file" id="file" />
+                    <label htmlFor="file">
+                        <img src={Add} alt="" />
+                        <span>Add an avatar</span>
                     </label>
-                    <Button variant="contained">SIGN UP</Button>
+                    <button>Sign up</button>
                 </form>
-                <p style={{ fontSize: "16px" }}>
-                    Do you have an account?
-                    <Link to="/">Click Here</Link>
+                <p>
+                    You do have an account? <Link to="/register">Login</Link>
                 </p>
             </div>
         </div>
