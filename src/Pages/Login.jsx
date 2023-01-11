@@ -41,6 +41,7 @@ const Login = () => {
                     <Link to="/register" style={{ textDecoration: "none", marginLeft: "7px" }} >Click Here</Link>
                 </p>
             </div>
+            <span className="logo">CI/CD is working!!!</span>
             <span className="logo">CI/CD is working...</span>
         </div>
     );
