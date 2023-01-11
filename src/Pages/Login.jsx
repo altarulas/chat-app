@@ -40,10 +40,7 @@ const Login = () => {
                     You don't have an account?
                     <Link to="/register" style={{ textDecoration: "none", marginLeft: "7px" }} >Click Here</Link>
                 </p>
-                <span className="logo">CI/CD is working!!!</span>
             </div>
-            <span className="logo">CI/CD is working!!!</span>
-            <span className="logo">CI/CD is working...</span>
         </div>
     );
 };
