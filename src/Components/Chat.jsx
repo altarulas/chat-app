@@ -5,7 +5,6 @@ import Messages from "./Messages";
 import More from "../Images/more.png";
 
 const Chat = () => {
-
     return (
         <div className="chat">
             <div className="chatInfo">

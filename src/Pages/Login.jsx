@@ -6,6 +6,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
     const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -14,11 +16,14 @@ const Login = () => {
         const password = e.target[1].value;
 
         try {
+            setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
             navigate("/home")
         } catch (error) {
+            setLoading(false);
             setError(true);
         }
+        setLoading(false);
     };
     return (
         <div className="formContainer">
@@ -29,6 +34,7 @@ const Login = () => {
                     <input type="email" placeholder="email" />
                     <input type="password" placeholder="password" />
                     <button>Sign in</button>
+                    {loading && "Please wait..."}
                     {error && <span>Something went wrong</span>}
                 </form>
                 <p>You don't have an account? <Link to="/register">Register</Link></p>

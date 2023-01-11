@@ -9,6 +9,8 @@ import { useState } from "react";
 
 const Register = () => {
     const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
+
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -19,41 +21,46 @@ const Register = () => {
         const file = e.target[3].files[0];
 
         try {
+            setLoading(true);
             // Create user with auth
-            const response = await createUserWithEmailAndPassword(auth, email, password)
+            const res = await createUserWithEmailAndPassword(auth, email, password);
 
-            // Create storage for image
-            const storageRef = ref(storage, displayName);
+            // Create storage for image with unique id
+            const date = new Date().getTime();
+            const storageRef = ref(storage, `${displayName + date}`);
 
             // Upload func to upload image
-            const uploadTask = uploadBytesResumable(storageRef, file);
-
-            uploadTask.on(
-                (error) => {
-                    console.log(error);
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                        await updateProfile(response.user, {
+            await uploadBytesResumable(storageRef, file).then(() => {
+                getDownloadURL(storageRef).then(async (downloadURL) => {
+                    try {
+                        //Update profile
+                        await updateProfile(res.user, {
                             displayName,
                             photoURL: downloadURL,
-                        })
-                        await setDoc(doc(db, "users", response.user.uid), {
-                            uid: response.user.uid,
+                        });
+                        //create user on firestore
+                        await setDoc(doc(db, "users", res.user.uid), {
+                            uid: res.user.uid,
                             displayName,
                             email,
                             photoURL: downloadURL,
-                        })
+                        });
 
-                        await setDoc(doc(db, "userChats", response.user.uid), {})
+                        //create empty user chats on firestore
+                        await setDoc(doc(db, "userChats", res.user.uid), {});
                         navigate("/home");
-                    });
-                }
-            );
-
-        } catch (error) {
+                    } catch (err) {
+                        setLoading(false);
+                        setError(true);
+                    }
+                });
+            });
+        } catch (err) {
+            setLoading(false);
             setError(true);
         }
+
+        setLoading(false);
     }
     return (
         <div className="formContainer">
@@ -70,6 +77,7 @@ const Register = () => {
                         <span>Add an avatar</span>
                     </label>
                     <button>Sign up</button>
+                    {loading && "Please wait..."}
                     {error && <span>Something went wrong</span>}
                 </form>
                 <p>
