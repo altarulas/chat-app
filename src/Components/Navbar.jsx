@@ -1,5 +1,4 @@
 import { AuthContext } from "../Context/Auth"
-import { Button } from "@mui/material";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useContext } from "react";

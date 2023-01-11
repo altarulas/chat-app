@@ -1,9 +1,6 @@
-import Add from "../Images/add.png";
-import Cam from "../Images/cam.png";
 import { ChatContext } from "../Context/Chat";
 import Input from "./Input";
 import Messages from "./Messages";
-import More from "../Images/more.png";
 import { useContext } from "react";
 
 const Chat = () => {
