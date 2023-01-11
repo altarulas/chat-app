@@ -5,8 +5,10 @@ import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import Add from "../Images/add.png";
+import { useState } from "react";
 
 const Register = () => {
+    const [error, setError] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -16,38 +18,42 @@ const Register = () => {
         const password = e.target[2].value;
         const file = e.target[3].files[0];
 
-        // Create user with auth
-        const response = await createUserWithEmailAndPassword(auth, email, password)
+        try {
+            // Create user with auth
+            const response = await createUserWithEmailAndPassword(auth, email, password)
 
-        // Create storage for image
-        const storageRef = ref(storage, displayName);
+            // Create storage for image
+            const storageRef = ref(storage, displayName);
 
-        // Upload func to upload image
-        const uploadTask = uploadBytesResumable(storageRef, file);
+            // Upload func to upload image
+            const uploadTask = uploadBytesResumable(storageRef, file);
 
-        uploadTask.on(
-            (error) => {
-                console.log(error);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    await updateProfile(response.user, {
-                        displayName,
-                        photoURL: downloadURL,
-                    })
-                    await setDoc(doc(db, "users", response.user.uid), {
-                        uid: response.user.uid,
-                        displayName,
-                        email,
-                        photoURL: downloadURL,
-                    })
+            uploadTask.on(
+                (error) => {
+                    console.log(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                        await updateProfile(response.user, {
+                            displayName,
+                            photoURL: downloadURL,
+                        })
+                        await setDoc(doc(db, "users", response.user.uid), {
+                            uid: response.user.uid,
+                            displayName,
+                            email,
+                            photoURL: downloadURL,
+                        })
 
-                    await setDoc(doc(db, "userChats", response.user.uid), {})
-                    navigate("/home");
-                });
-            }
-        );
+                        await setDoc(doc(db, "userChats", response.user.uid), {})
+                        navigate("/home");
+                    });
+                }
+            );
 
+        } catch (error) {
+            setError(true);
+        }
     }
     return (
         <div className="formContainer">
@@ -64,6 +70,7 @@ const Register = () => {
                         <span>Add an avatar</span>
                     </label>
                     <button>Sign up</button>
+                    {error && <span>Something went wrong</span>}
                 </form>
                 <p>
                     You do have an account? <Link to="/">Login</Link>

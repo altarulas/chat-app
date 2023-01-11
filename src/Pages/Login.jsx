@@ -1,25 +1,37 @@
-import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
-import { TextField } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
+    const [error, setError] = useState(false);
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const email = e.target[0].value;
+        const password = e.target[1].value;
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            navigate("/home")
+        } catch (error) {
+            setError(true);
+        }
+    };
     return (
         <div className="formContainer">
             <div className="formWrapper">
-                <span className="logo">Login</span>
-                <form>
-                    <TextField id="standard-basic" label="e-mail" variant="standard" />
-                    <TextField
-                        id="outlined-password-input-2"
-                        label="password"
-                        type="password"
-                        autoComplete="current-password"
-                        variant="standard"
-                    />
-                    <Button variant="contained">SIGN IN</Button>
+                <span className="logo">Lama Chat</span>
+                <span className="title">Login</span>
+                <form onSubmit={handleSubmit}>
+                    <input type="email" placeholder="email" />
+                    <input type="password" placeholder="password" />
+                    <button>Sign in</button>
+                    {error && <span>Something went wrong</span>}
                 </form>
-                <p style={{ fontSize: "16px" }}>Don't have an account?</p>{" "}
-                <Link to="/register">Click Here</Link>
+                <p>You don't have an account? <Link to="/register">Register</Link></p>
             </div>
         </div>
     );
