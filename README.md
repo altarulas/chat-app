@@ -2,7 +2,7 @@ This is a chat application which you can chat with users in real-time. This Proj
 
 The project is still under development and currently lacks some features and may contain bugs...
 
-Url of Live Project: https://chat-app-react-b03d9.web.app/
+Url of the Live Project: https://chat-app-react-b03d9.web.app/
 
 These are test users but you can also create your own account
 
