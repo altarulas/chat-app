@@ -1,4 +1,5 @@
 import { AuthContext } from "../Context/Auth"
+import { Button } from "@mui/material";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useContext } from "react";
@@ -9,14 +10,16 @@ const Navbar = () => {
   const navigate = useNavigate();
   return (
     <div className='navbar'>
-      <span className="logo">Altar's Chat</span>
       <div className="user">
-        <img src={currentUser.photoURL} alt="" />
-        <span>{currentUser.displayName}</span>
+        <div className="navbarInfo">
+          <img src={currentUser.photoURL} alt="" />
+          <span>{currentUser.displayName}</span>
+        </div>
         <button onClick={() => {
           signOut(auth)
           navigate("/");
-        }} >Logout</button>
+        }} variant="contained">Logout</button>
+
       </div>
     </div>
   );

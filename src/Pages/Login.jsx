@@ -28,16 +28,18 @@ const Login = () => {
     return (
         <div className="formContainer">
             <div className="formWrapper">
-                <span className="logo">Lama Chat</span>
-                <span className="title">Login</span>
+                <span className="logo">Chat App Login</span>
                 <form onSubmit={handleSubmit}>
                     <input type="email" placeholder="email" />
                     <input type="password" placeholder="password" />
-                    <button>Sign in</button>
+                    <button>LOGIN</button>
                     {loading && "Please wait..."}
                     {error && <span>Something went wrong</span>}
                 </form>
-                <p>You don't have an account? <Link to="/register">Register</Link></p>
+                <p>
+                    You don't have an account?
+                    <Link to="/register" style={{ textDecoration: "none", marginLeft: "7px" }} >Click Here</Link>
+                </p>
             </div>
         </div>
     );
