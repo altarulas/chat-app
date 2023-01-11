@@ -15,7 +15,7 @@
 }
 
 .formContainer {
-  background-color: #a7bcff;
+  background-color: #b3bafffa;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -31,6 +31,7 @@
     align-items: center;
 
     .logo {
+      margin-bottom: 20px;
       color: #5d5b8d;
       font-weight: bold;
       font-size: 24px;
@@ -47,6 +48,7 @@
       gap: 15px;
 
       input {
+        margin-bottom: 10px;
         padding: 15px;
         border: none;
         width: 250px;
@@ -57,12 +59,17 @@
       }
 
       button {
-        background-color: #7b96ec;
+        margin: 10px 0px;
+        border-radius: 5px;
+        background-color: #554ee7;
         color: white;
         padding: 10px;
         font-weight: bold;
         border: none;
         cursor: pointer;
+        &:hover {
+          background-color: #4b488e;
+        }
       }
 
       label {
@@ -87,14 +94,13 @@
 }
 
 .home {
-  background-color: #a7bcff;
+  background-color: #b3bafffa;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
 
   .container {
-    border: 1px solid white;
     border-radius: 10px;
     width: 65%;
     height: 80%;
@@ -106,17 +112,18 @@
 
     .sidebar {
       flex: 1;
-      background-color: #3e3c61;
+      background-color: #554ee7;
       position: relative;
 
       .navbar {
         display: flex;
         align-items: center;
-        background-color: #2f2d52;
+        background-color: #282424;
         height: 50px;
         padding: 10px;
         justify-content: space-between;
         color: #ddddf7;
+        border-right: 1px solid #acacf1;
 
         .logo {
           font-weight: bold;
@@ -126,10 +133,21 @@
         }
 
         .user {
+          width: 100%;
           display: flex;
-          gap: 10px;
+          justify-content: space-between;
+          align-items: center;
+          display: flex;
+          gap: 15px;
+
+          .navbarInfo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
 
           img {
+            margin-right: 15px;
             background-color: #ddddf7;
             height: 24px;
             width: 24px;
@@ -138,9 +156,13 @@
           }
 
           button {
-            background-color: #5d5b8d;
+            width: 100px;
+            height: 35px;
+            border-radius: 5px;
+            margin-left: 20px;
+            background-color: #554ee7;
             color: #ddddf7;
-            font-size: 10px;
+            font-size: 13px;
             border: none;
             cursor: pointer;
             @include tablet {
@@ -151,7 +173,7 @@
         }
       }
       .search {
-        border-bottom: 1px solid gray;
+        border-bottom: 1px solid rgb(161, 161, 161);
 
         .searchForm {
           padding: 10px;
@@ -178,7 +200,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #2f2d52;
+          background-color: #282424;
         }
 
         img {
@@ -203,28 +225,24 @@
     .chat {
       flex: 2;
 
-      .chatInfo {
-        height: 50px;
-        background-color: #5d5b8d;
+      .chatNavbar {
+        width: 100%;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 10px;
-        color: lightgray;
-      }
+        background-color: #282424;
 
-      .chatIcons {
-        display: flex;
-        gap: 10px;
-
-        img {
-          height: 24px;
-          cursor: pointer;
+        .chatInfo {
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          color: lightgray;
         }
       }
 
       .messages {
-        background-color: #ddddf7;
+        background-color: #e7e7e7;
         padding: 10px;
         height: calc(100% - 160px);
         overflow: scroll;
@@ -303,7 +321,8 @@
         .send {
           display: flex;
           align-items: center;
-          gap: 10px;
+          justify-content: center;
+          gap: 25px;
 
           img {
             height: 24px;
@@ -311,10 +330,12 @@
           }
 
           button {
+            width: 75px;
+            border-radius: 5px;
             border: none;
             padding: 10px 15px;
             color: white;
-            background-color: #8da4f1;
+            background-color: #554ee7;
             cursor: pointer;
           }
         }
