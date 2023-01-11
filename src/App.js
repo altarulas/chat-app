@@ -2,24 +2,26 @@ import "./style.scss";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { AuthContext } from "./Context/Auth";
+import { AuthContextProvider } from "./Context/Auth";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
+import ProtectedRoute from "./Context/ProtectedRoute";
 import Register from "./Pages/Register";
-import { useContext } from "react";
 
-const App = () => {
-  const { currentUser } = useContext(AuthContext);
-
+function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/home" element={<Home />} />
+          </Route>
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthContextProvider>
   );
-};
+}
 
 export default App;
