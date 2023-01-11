@@ -9,7 +9,6 @@ import {
 import { db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
-import Attach from "../Images/attach.png";
 import { AuthContext } from "../Context/Auth";
 import { ChatContext } from "../Context/Chat";
 import Img from "../Images/img.png";
@@ -18,7 +17,7 @@ import { v4 as uuid } from "uuid";
 const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
-  const [error, setError] = useState(false);
+
 
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
@@ -31,7 +30,7 @@ const Input = () => {
 
       uploadTask.on(
         (error) => {
-          setError(true);
+          console.log(error)
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
