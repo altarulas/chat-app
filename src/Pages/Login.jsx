@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
+import Banner from "../Images/banner.jpg";
 import Loading from "../Utility/Loading"
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -36,15 +37,15 @@ const Login = () => {
         setLoading(false);
     };
     return (
-        <div id="login-base" className="w-screen h-screen bg-blue-300 flex items-center justify-center">
+        <div id="login-base" className="w-screen h-screen bg-blue-300 flex items-center justify-center flex-row">
             <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
-                <div id="form-wrapper" className="flex flex-col w-full h-full px-16">
-                    <span className="text-center font-bold text-3xl my-4">
-                        Chat Application
+                <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
+                    <span className="text-center font-semibold text-3xl my-4 max-sm:text-2xl">
+                        Chat App Login
                     </span>
                     <TextField
                         margin="normal"
-                        id="standard-basic-2"
+                        id="standard-basic-1"
                         label="E-mail"
                         variant="standard"
                         onChange={(e) => {
@@ -53,7 +54,7 @@ const Login = () => {
                     />
                     <TextField
                         margin="normal"
-                        id="password-standard-basic-3"
+                        id="password-standard-basic-2"
                         label="Password"
                         type="password"
                         autoComplete="current-password"
@@ -81,7 +82,7 @@ const Login = () => {
                         <Loading />
                     </div>}
                     {error && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
-                        Login Failed Try Again
+                        Login is Failed
                     </span>}
                 </div>
             </div>
