@@ -6,13 +6,7 @@ import { useContext } from "react";
 const Chat = () => {
     const { data } = useContext(ChatContext);
     return (
-        <div className="chat">
-            <div className="chatNavbar">
-                <div></div>
-                <div className="chatInfo">
-                    {<span>{data.user?.displayName}</span>}
-                </div>
-            </div>
+        <div id="chat-base" className=" w-2/3 h-full rounded-r-lg flex flex-col">
             <Messages />
             <Input />
         </div>

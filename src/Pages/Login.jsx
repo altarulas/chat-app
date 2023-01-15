@@ -2,7 +2,6 @@ import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
-import Banner from "../Images/banner.jpg";
 import Loading from "../Utility/Loading"
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -37,7 +36,7 @@ const Login = () => {
         setLoading(false);
     };
     return (
-        <div id="login-base" className="w-screen h-screen bg-blue-300 flex items-center justify-center flex-row">
+        <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-row">
             <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
                 <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
                     <span className="text-center font-semibold text-3xl my-4 max-sm:text-2xl">
