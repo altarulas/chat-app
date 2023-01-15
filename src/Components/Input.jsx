@@ -75,26 +75,31 @@ const Input = () => {
     setImg(null);
   };
   return (
-    <div className="input">
-      <input
-        type="text"
-        placeholder="Type something..."
-        onChange={(e) => setText(e.target.value)}
-        value={text}
-      />
-      <div className="send">
+    <>
+      <div id="input-base" className="w-full h-1/6 flex border-l-4 bg-gray-200">
+
         <input
-          type="file"
-          style={{ display: "none" }}
-          id="file"
-          onChange={(e) => setImg(e.target.files[0])}
-        />
-        <label htmlFor="file">
-          <img src={Img} alt="" />
-        </label>
-        <button onClick={handleSend}>Send</button>
+          className="w-3/4 pl-2 bg-gray-200"
+          type="text"
+          placeholder="Type something..."
+          onChange={(e) => setText(e.target.value)}
+          value={text} />
+
+        <div className="w-1/4 flex items-center justify-between px-4 border-l-2 border-gray-300">
+          <label className="cursor-pointer" htmlFor="file">
+            <input
+              className="cursor-pointer"
+              type="file"
+              style={{ display: "none" }}
+              id="file"
+              onChange={(e) => setImg(e.target.files[0])} />
+            <img src={Img} alt="" />
+          </label>
+          <button className="bg-gray-700 text-white font-semibold h-10 w-20 rounded-lg" onClick={handleSend}>Send</button>
+        </div>
+
       </div>
-    </div>
+    </>
   );
 };
 

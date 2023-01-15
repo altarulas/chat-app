@@ -21,7 +21,7 @@ const Messages = () => {
     }, [data.chatId]);
 
     return (
-        <div className="messages">
+        <div id="messages-base" className="w-full h-5/6 overflow-scroll bg-gray-200">
             {messages.map((m) => (
                 <Message message={m} key={m.id} />
             ))}
