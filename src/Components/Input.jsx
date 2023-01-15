@@ -12,8 +12,10 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { AuthContext } from "../Context/Auth";
 import { Button } from "@mui/material";
 import { ChatContext } from "../Context/Chat";
-import Img from "../Images/img.png";
 import { v4 as uuid } from "uuid";
+
+/* import Img from "../Images/img.png"; */
+
 
 const Input = () => {
   const [inputText, setInputText] = useState("");
