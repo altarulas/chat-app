@@ -58,7 +58,7 @@ const Register = () => {
 
                         //create empty user chats on firestore
                         await setDoc(doc(db, "userChats", res.user.uid), {});
-                        navigate("/home");
+                        navigate("/app");
                     } catch (error) {
                         setLoading(false);
                         setError(true);
@@ -116,18 +116,19 @@ const Register = () => {
                     <div id="image-upload" className="w-44 mt-4">
                         <input style={{ display: "none" }} type="file" id="file" />
                         <label htmlFor="file" className="flex items-center cursor-pointer">
-                            <img src={Add} alt="" className="bg-blue-500 rounded-md" />
+                            <img src={Add} alt="" className="bg-indigo-600 rounded-md" />
                             <span className="ml-4 font-semibold">Add an avatar</span>
                         </label>
                     </div>
                     <Button
+                        color="secondary"
                         onClick={registerHandler}
                         style={{ marginTop: "28px" }}
                         variant="contained">
                         SIGN UP
                     </Button>
                     <span className="text-base mt-8 mb-4 text-center">
-                        Don't you have an account?
+                        Do you have an account?
                         <Link
                             className="font-bold"
                             to="/"

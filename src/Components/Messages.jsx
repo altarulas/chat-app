@@ -8,7 +8,7 @@ import { db } from "../firebase";
 const Messages = () => {
     const [messages, setMessages] = useState([]);
 
-    const { data } = useContext(ChatContext);
+    const { data, visible } = useContext(ChatContext);
 
     useEffect(() => {
         const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
@@ -21,11 +21,19 @@ const Messages = () => {
     }, [data.chatId]);
 
     return (
-        <div id="messages-base" className="w-full h-5/6 overflow-scroll bg-gray-200">
-            {messages.map((m) => (
-                <Message message={m} key={m.id} />
-            ))}
-        </div>
+        <>
+            {visible ? (
+                <div id="messages-base" style={{ height: "86%" }} className="w-full overflow-scroll bg-gray-200">
+                    {messages.map((m) => (
+                        <Message message={m} key={m.id} />
+                    ))}
+                </div>
+            ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-3xl font-semibold">Welcome to Chat App!</span>
+                </div>
+            )}
+        </>
     );
 };
 

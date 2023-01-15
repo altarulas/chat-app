@@ -25,7 +25,7 @@ const Login = () => {
         try {
             setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
-            navigate("/home")
+            navigate("/app-screen")
         } catch (error) {
             setLoading(false);
             setError(true);
@@ -63,6 +63,7 @@ const Login = () => {
                         }}
                     />
                     <Button
+                        color="secondary"
                         onClick={loginHandler}
                         style={{ marginTop: "28px" }}
                         variant="contained">
