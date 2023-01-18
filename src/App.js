@@ -1,5 +1,3 @@
-import "./style.scss";
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { AppProtection } from "./Context/ProtectedRoute";
