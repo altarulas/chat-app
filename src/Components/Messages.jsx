@@ -29,7 +29,7 @@ const Messages = () => {
                     ))}
                 </div>
             ) : (
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full h-full flex items-center justify-center bg-gray-100">
                     <span className="text-3xl font-semibold">Welcome to Chat App!</span>
                 </div>
             )}

@@ -35,7 +35,7 @@ const Chats = () => {
   return (
     <>
       {loading ? (
-        <div id="svg-wrapper" className="my-4 flex justify-center">
+        <div id="svg-wrapper" className="my-4 h-4/6 flex justify-center items-center">
           <Loading />
         </div>
       ) : (
