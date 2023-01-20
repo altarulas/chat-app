@@ -1,5 +1,6 @@
 import { AuthContext } from "../Context/Auth"
 import { Button } from "@mui/material";
+import { ChatContext } from "../Context/Chat";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useContext } from "react";
@@ -7,7 +8,13 @@ import { useNavigate } from "react-router-dom";
 
 const BottomBar = () => {
   const { currentUser } = useContext(AuthContext);
+  const { dispatch } = useContext(ChatContext);
   const navigate = useNavigate();
+
+  const resetSelected = (userInfo) => {
+    dispatch({ type: "LOGOUT", payload: userInfo });
+  };
+
   return (
     <div id="bottom-bar-base" className="w-full h-1/6 p-1 px-2 py-2">
       <div id="bar-wrapper" className="w-full h-full bg-black flex items-center rounded-xl px-4" >
@@ -19,6 +26,7 @@ const BottomBar = () => {
           onClick={() => {
             signOut(auth)
             navigate("/");
+            resetSelected();
           }}
         >
           LOGOUT

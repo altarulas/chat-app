@@ -4,76 +4,73 @@ import { auth, db, storage } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { useRef, useState } from "react";
 
 import Add from "../Images/add.png";
 import Loading from "../Utility/Loading";
-import { useState } from "react";
+
+// TODO: Make the states with userReducer hook
+// TODO: Make user validation and display an error message
 
 const Register = () => {
-    const [error, setError] = useState(false);
+    const [serverError, setServerError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
-        name: "",
+        displayName: "",
         email: "",
         password: "",
-        file: File,
+        image: undefined,
     });
 
 
     const navigate = useNavigate();
+    const imageRef = useRef(null);
 
-    const registerHandler = async (e) => {
-        e.preventDefault();
-
-        const name = user.name
+    // Makes user register
+    const registerHandler = async () => {
+        const displayName = user.displayName
         const email = user.email
         const password = user.password
-        const file = user.file
+        const image = imageRef.current.files[0];
 
         try {
             setLoading(true);
-            // Create user with auth
-            const res = await createUserWithEmailAndPassword(auth, email, password);
-
-            // Create storage for image with unique id
+            // Creates user 
+            const response = await createUserWithEmailAndPassword(auth, email, password);
+            // Creates storage for images with unique id
             const date = new Date().getTime();
-            const storageRef = ref(storage, `${name + date}`);
-
-            // Upload func to upload image
-            await uploadBytesResumable(storageRef, file).then(() => {
+            //Creates a reference to a location within the storage service, using the concatenated string as the path
+            const storageRef = ref(storage, `${displayName + date}`);
+            // Uploads images
+            await uploadBytesResumable(storageRef, image).then(() => {
                 getDownloadURL(storageRef).then(async (downloadURL) => {
                     try {
                         //Update profile
-                        await updateProfile(res.user, {
-                            name,
+                        await updateProfile(response.user, {
+                            displayName,
                             photoURL: downloadURL,
                         });
-                        //create user on firestore
-                        await setDoc(doc(db, "users", res.user.uid), {
-                            uid: res.user.uid,
-                            name,
+                        //Creates user on firestore
+                        await setDoc(doc(db, "users", response.user.uid), {
+                            uid: response.user.uid,
+                            displayName,
                             email,
                             photoURL: downloadURL,
                         });
-
-                        //create empty user chats on firestore
-                        await setDoc(doc(db, "userChats", res.user.uid), {});
-                        navigate("/app");
+                        //Creates empty user chats on firestore
+                        await setDoc(doc(db, "userChats", response.user.uid), {});
+                        navigate("/app-screen");
                     } catch (error) {
                         setLoading(false);
-                        setError(true);
+                        setServerError(true);
                     }
                 });
             });
         } catch (error) {
             setLoading(false);
-            setError(true);
+            setServerError(true);
         }
-
-        setUser({ ...user, name: "" });
-        setUser({ ...user, email: "" });
-        setUser({ ...user, password: "" });
-        setUser({ ...user, file: null });
+        setUser({ ...user, displayName: "", email: "", password: "", file: null });
         setLoading(false);
     }
 
@@ -90,7 +87,7 @@ const Register = () => {
                         label="Name"
                         variant="standard"
                         onChange={(e) => {
-                            setUser({ ...user, name: e.target.value });
+                            setUser({ ...user, displayName: e.target.value });
                         }}
                     />
                     <TextField
@@ -114,7 +111,7 @@ const Register = () => {
                         }}
                     />
                     <div id="image-upload" className="w-44 mt-4">
-                        <input style={{ display: "none" }} type="file" id="file" />
+                        <input style={{ display: "none" }} ref={imageRef} type="file" id="file" />
                         <label htmlFor="file" className="flex items-center cursor-pointer">
                             <img src={Add} alt="" className="bg-indigo-600 rounded-md" />
                             <span className="ml-4 font-semibold">Add an avatar</span>
@@ -139,7 +136,7 @@ const Register = () => {
                     {loading && <div id="svg-wrapper" className="my-4 flex justify-center">
                         <Loading />
                     </div>}
-                    {error && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
+                    {serverError && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
                         Sign Up is Failed
                     </span>}
                 </div>
