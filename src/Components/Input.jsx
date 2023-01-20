@@ -74,7 +74,7 @@ const Input = () => {
       chatUpdater();
     } else if (image) {
       const storageRef = ref(storage, uuid());
-      const uploadTask = uploadBytesResumable(storageRef, image).then(
+      await uploadBytesResumable(storageRef, image).then(
         () => {
           getDownloadURL(storageRef).then(async (downloadURL) => {
             await updateDoc(doc(db, "chats", data.chatId), {
