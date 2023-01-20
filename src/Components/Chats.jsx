@@ -25,11 +25,13 @@ const Chats = () => {
       };
     };
 
-    currentUser.uid && getChats();
+    if (currentUser.uid) {
+      getChats();
+    }
   }, [currentUser.uid]);
 
-  const handleSelect = (u) => {
-    dispatch({ type: "CHANGE_USER", payload: u });
+  const handleSelect = (userInfo) => {
+    dispatch({ type: "SHOW_CHAT", payload: userInfo });
   };
 
   return (

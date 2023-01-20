@@ -21,20 +21,23 @@ const Search = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(false);
 
+  //Checks whether the group(chats in firestore) exists. If it is not, it will be create 
   const handleSelect = async () => {
-    //check whether the group(chats in firestore) exists, if not create
     const combinedId =
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
         : user.uid + currentUser.uid;
-    try {
-      const res = await getDoc(doc(db, "chats", combinedId));
 
-      if (!res.exists()) {
-        //create a chat in chats collection
+    try {
+      //Checks if there is a already created chat and userChats
+      const response = await getDoc(doc(db, "chats", combinedId));
+
+      //If there is no response then it will creates chats and userChats
+      if (!response.exists()) {
+        //Creates a chat in chats collection
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
 
-        //create user chats
+        //Creates userChats for currentUser
         await updateDoc(doc(db, "userChats", currentUser.uid), {
           [combinedId + ".userInfo"]: {
             uid: user.uid,
@@ -44,6 +47,7 @@ const Search = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
 
+        //Creates userChats for clicked user (user that currentUser searched and clicked)
         await updateDoc(doc(db, "userChats", user.uid), {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
@@ -53,6 +57,7 @@ const Search = () => {
           [combinedId + ".date"]: serverTimestamp(),
         });
       }
+
     } catch (error) {
       setError(true);
     }
@@ -61,11 +66,12 @@ const Search = () => {
     setUserName("")
   };
 
+  //Searches user that you typed to input and sets the user's information
   const handleSearch = async () => {
-    const q = query(collection(db, "users"), where("displayName", "==", userName));
+    const searchedUser = query(collection(db, "users"), where("displayName", "==", userName));
 
     try {
-      const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(searchedUser);
       querySnapshot.forEach((doc) => {
         setUser(doc.data());
         setUserName("");
@@ -76,6 +82,7 @@ const Search = () => {
 
   }
 
+  //Makes the enter key clickable 
   const handleKey = (e) => {
     e.code === "Enter" && handleSearch();
   };

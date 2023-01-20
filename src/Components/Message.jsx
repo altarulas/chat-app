@@ -28,8 +28,10 @@ const Message = ({ message }) => {
           />
         </div>
         <div className="max-w-4/5 flex flex-col">
-          <p className="max-w-max py-1 px-4 bg-gray-300 rounded-2xl max-w-sm break-words max-w-md">{message.text}</p>
-          {message.img && <img className="w-1/2 max-w-max" src={message.img} alt="" />}
+          {message.text !== "" &&
+            <p className="max-w-max py-1 px-4 bg-gray-300 rounded-2xl max-w-sm break-words max-w-md mb-4">{message.text}
+            </p>}
+          {message.image && <img className="w-48 h-32 rounded-lg object-cover" src={message.image} alt="" />}
         </div>
       </div>
 
@@ -48,8 +50,10 @@ const Message = ({ message }) => {
           />
         </div>
         <div className="max-w-4/5 flex flex-col g-10">
-          <p className="max-w-max py-1 px-4 bg-gray-400 rounded-2xl break-words max-w-md">{message.text}</p>
-          {message.img && <img className="w-1/2 max-w-max" src={message.img} alt="" />}
+          {message.text !== "" &&
+            <p className="max-w-max py-1 px-4 bg-gray-300 rounded-2xl max-w-sm break-words max-w-md mb-4">{message.text}
+            </p>}
+          {message.image && <img className="w-48 h-32 rounded-lg object-cover" src={message.image} alt="" />}
         </div>
       </div>
     )

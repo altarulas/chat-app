@@ -14,15 +14,4 @@ export const AppProtection = () => {
     return isAuth ? <Outlet /> : <Navigate to={"/"} />;
 };
 
-/* export const LoginProtection = () => {
-    const { currentUser } = useContext(AuthContext);
-    const useAuth = () => {
-        const checkUser = { loggedIn: currentUser };
-        return checkUser && checkUser.loggedIn;
-    };
-    const isAuth = useAuth();
-
-    return !isAuth ? <Outlet /> : <Navigate to={"/app"} />;
-
-}; */
 

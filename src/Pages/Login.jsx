@@ -1,12 +1,18 @@
 import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
+import { AuthContext } from "../Context/Auth";
 import Loading from "../Utility/Loading"
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+// TODO: Make the states with userReducer hook
+// TODO: Make user validation and display an error message
+
 const Login = () => {
+    const { currentUser } = useContext(AuthContext);
+
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
@@ -16,9 +22,11 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const loginHandler = async (e) => {
-        e.preventDefault();
-
+    // Checks if user exist or not. If it exist it will navigate to app-screen page
+    const loginHandler = async () => {
+        if (currentUser) {
+            navigate("/app-screen");
+        }
         const email = user.email
         const password = user.password
 
@@ -35,6 +43,7 @@ const Login = () => {
         setUser({ ...user, password: "" });
         setLoading(false);
     };
+
     return (
         <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-row">
             <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
