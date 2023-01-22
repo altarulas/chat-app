@@ -22,10 +22,10 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    // Checks if user exist or not. If it exist it will navigate to app-screen page
+    // Checks if user exist or not. If it exist it will navigate to app page
     const loginHandler = async () => {
         if (currentUser) {
-            navigate("/app-screen");
+            navigate("/app");
         }
         const email = user.email
         const password = user.password
@@ -33,7 +33,7 @@ const Login = () => {
         try {
             setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
-            navigate("/app-screen")
+            navigate("/app")
         } catch (error) {
             setLoading(false);
             setError(true);
