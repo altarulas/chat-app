@@ -7,11 +7,11 @@ import Loading from "../Utility/Loading";
 import { db } from "../firebase";
 
 const Chats = () => {
-  const [chats, setChats] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
+
+  const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getChats = () => {
@@ -19,12 +19,10 @@ const Chats = () => {
         setChats(doc.data());
         setLoading(false);
       });
-
       return () => {
         unSub();
       };
     };
-
     if (currentUser.uid) {
       getChats();
     }
@@ -44,12 +42,13 @@ const Chats = () => {
         <div id="chats-base" className="w-full h-4/6 overflow-x-hidden overflow-y-auto bg-gray-600">
           {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
             <div
+              id="chat-wrapper"
               className="flex items-center pl-4 h-20 cursor-pointer"
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
               <img className="w-12 h-12 object-cover rounded-xl mr-6" src={chat[1].userInfo.photoURL} alt="" />
-              <div className="flex flex-row">
+              <div id="chat-info" className="flex flex-row">
                 <span className="text-base mr-6 text-gray-100 font-semibold">{chat[1].userInfo.displayName}</span>
                 {!((chat[1].lastMessage?.text) === undefined) &&
                   <p className="text-gray-400 font-semibold">
