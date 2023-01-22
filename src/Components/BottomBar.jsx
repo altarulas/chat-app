@@ -11,8 +11,8 @@ const BottomBar = () => {
   const { dispatch } = useContext(ChatContext);
   const navigate = useNavigate();
 
-  const resetSelected = (userInfo) => {
-    dispatch({ type: "LOGOUT", payload: userInfo });
+  const resetSelected = () => {
+    dispatch({ type: "LOGOUT" });
   };
 
   return (

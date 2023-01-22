@@ -14,7 +14,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route element={<AppProtection />}>
-              <Route path="/app-screen" element={<AppScreen />} />
+              <Route path="/app" element={<AppScreen />} />
             </Route>
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
