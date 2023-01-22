@@ -16,12 +16,11 @@ import Img from "../Images/img.png";
 import { v4 as uuid } from "uuid";
 
 const Input = () => {
-  const [inputText, setInputText] = useState("");
-  const [image, setImage] = useState(null);
-
-
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
+
+  const [inputText, setInputText] = useState("");
+  const [image, setImage] = useState(null);
 
   const handleSend = async () => {
     const text = inputText;
@@ -91,7 +90,7 @@ const Input = () => {
       );
       chatUpdater();
     } else {
-      //TODO: add edge case
+      alert("Something went wrong try again");
     }
 
     setInputText("");
@@ -105,8 +104,8 @@ const Input = () => {
   return (
     <>
       <div id="input-base" className="h-1/6 w-full flex border-l-4 bg-gray-200">
-
         <input
+          id="input-text"
           className="w-3/4 pl-2 bg-gray-200"
           type="text"
           placeholder="Type something..."
@@ -115,10 +114,9 @@ const Input = () => {
           onKeyDown={handleKeyboard}
           {...(!data.showChat && { disabled: true })}
         />
-
         <div className="w-1/4 flex items-center justify-center px-6 border-l-2 border-gray-300 justify-between">
-
           <label
+            id="image-upload"
             className="cursor-pointer"
             htmlFor="file"
             {...(!data.showChat && { disabled: true })}
@@ -135,7 +133,6 @@ const Input = () => {
               <img className={`${!data.showChat && ("cursor-not-allowed")} w-full`} src={Img} alt="" />
             </div>
           </label>
-
           <Button
             style={{ width: "50px", height: "40px" }}
             color="secondary"
@@ -146,7 +143,6 @@ const Input = () => {
             Send
           </Button>
         </div>
-
       </div>
     </>
   );

@@ -8,10 +8,10 @@ import Navbar from "./Navbar";
 import { db } from "../firebase";
 
 const Messages = () => {
+    const { data } = useContext(ChatContext);
+
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    const { data } = useContext(ChatContext);
 
     useEffect(() => {
         setLoading(true);
@@ -34,7 +34,7 @@ const Messages = () => {
                     ))}
                 </div>
             ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                <div id="starter-content" className="w-full h-full flex items-center justify-center bg-gray-100">
                     {loading ? (
                         <Loading />
                     ) : (
