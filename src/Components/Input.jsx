@@ -59,7 +59,6 @@ const Input = () => {
           });
         }
       );
-
       chatUpdater();
     } else if (text !== "") {
       await updateDoc(doc(db, "chats", data.chatId), {
@@ -92,7 +91,6 @@ const Input = () => {
     } else {
       alert("Something went wrong try again");
     }
-
     setInputText("");
     setImage(null);
   }
