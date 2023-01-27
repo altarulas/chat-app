@@ -7,8 +7,7 @@ import Loading from "../Utility/Loading"
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-// TODO: Make the states with userReducer hook
-// TODO: Make user validation and display an error message
+// TODO: display message for correct or incorrect login with animation
 
 const Login = () => {
     const { currentUser } = useContext(AuthContext);
@@ -21,7 +20,6 @@ const Login = () => {
     });
 
     const navigate = useNavigate();
-
     // Checks if user exist or not. If it exist it will navigate to app page
     const loginHandler = async () => {
         if (currentUser) {
@@ -29,16 +27,14 @@ const Login = () => {
         }
         const email = user.email
         const password = user.password
-
         try {
             setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
-            navigate("/app")
+            navigate("/app");
         } catch (error) {
             setLoading(false);
             setError(true);
         }
-
         setUser({ ...user, email: "" });
         setUser({ ...user, password: "" });
         setLoading(false);
@@ -52,6 +48,7 @@ const Login = () => {
                         Chat App Login
                     </span>
                     <TextField
+                        inputProps={{ "data-testid": "email-input" }}
                         margin="normal"
                         id="standard-basic-1"
                         label="E-mail"
@@ -61,6 +58,7 @@ const Login = () => {
                         }}
                     />
                     <TextField
+                        inputProps={{ "data-testid": "password-input" }}
                         margin="normal"
                         id="password-standard-basic-2"
                         label="Password"
@@ -72,6 +70,7 @@ const Login = () => {
                         }}
                     />
                     <Button
+                        data-testid="login"
                         color="secondary"
                         onClick={loginHandler}
                         style={{ marginTop: "28px" }}
@@ -87,10 +86,12 @@ const Login = () => {
                             Click Here
                         </Link>
                     </span>
-                    {loading && <div id="svg-wrapper" className="my-4 flex justify-center">
-                        <Loading />
-                    </div>}
-                    {error && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
+                    <div data-testid="loading-wrapper">
+                        {loading && <div data-testid="loading" id="svg-wrapper" className="my-4 flex justify-center">
+                            <Loading />
+                        </div>}
+                    </div>
+                    {error && <span data-testid="error" id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
                         Login is Failed
                     </span>}
                 </div>

@@ -9,8 +9,7 @@ import { useRef, useState } from "react";
 import Add from "../Images/add.png";
 import Loading from "../Utility/Loading";
 
-// TODO: Make the states with userReducer hook
-// TODO: Make user validation and display an error message
+// TODO: display message for correct or incorrect login with animation
 
 const Register = () => {
     const [serverError, setServerError] = useState(false);
@@ -22,10 +21,8 @@ const Register = () => {
         image: undefined,
     });
 
-
     const navigate = useNavigate();
     const imageRef = useRef(null);
-
     // Makes user register
     const registerHandler = async () => {
         const displayName = user.displayName
@@ -82,6 +79,7 @@ const Register = () => {
                         Chat App Sign Up
                     </span>
                     <TextField
+                        inputProps={{ "data-testid": "name-input" }}
                         margin="normal"
                         id="standard-basic-3"
                         label="Name"
@@ -91,6 +89,7 @@ const Register = () => {
                         }}
                     />
                     <TextField
+                        inputProps={{ "data-testid": "email-input" }}
                         margin="normal"
                         id="standard-basic-4"
                         label="E-mail"
@@ -100,6 +99,7 @@ const Register = () => {
                         }}
                     />
                     <TextField
+                        inputProps={{ "data-testid": "password-input" }}
                         margin="normal"
                         id="password-standard-basic-5"
                         label="Password"
@@ -110,7 +110,7 @@ const Register = () => {
                             setUser({ ...user, password: e.target.value });
                         }}
                     />
-                    <div id="image-upload" className="w-44 mt-4">
+                    <div data-testid="image-upload" id="image-upload" className="w-44 mt-4">
                         <input style={{ display: "none" }} ref={imageRef} type="file" id="file" />
                         <label htmlFor="file" className="flex items-center cursor-pointer">
                             <img src={Add} alt="" className="bg-indigo-600 rounded-md" />
@@ -133,9 +133,11 @@ const Register = () => {
                             Click Here
                         </Link>
                     </span>
-                    {loading && <div id="svg-wrapper" className="my-4 flex justify-center">
-                        <Loading />
-                    </div>}
+                    <div data-testid="loading-wrapper">
+                        {loading && <div data-testid="loading" id="svg-wrapper" className="my-4 flex justify-center">
+                            <Loading />
+                        </div>}
+                    </div>
                     {serverError && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
                         Sign Up is Failed
                     </span>}

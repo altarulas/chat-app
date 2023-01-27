@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const BottomBar = () => {
   const { currentUser } = useContext(AuthContext);
   const { dispatch } = useContext(ChatContext);
+
   const navigate = useNavigate();
 
   const resetSelected = () => {
