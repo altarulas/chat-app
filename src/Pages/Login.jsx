@@ -10,6 +10,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 // TODO: display message for correct or incorrect login with animation
 
 const Login = () => {
+    /* const { loginHandlerTest } = props; */
     const { currentUser } = useContext(AuthContext);
 
     const [error, setError] = useState(false);
@@ -19,8 +20,6 @@ const Login = () => {
         password: "",
     });
 
-    const navigate = useNavigate();
-    // Checks if user exist or not. If it exist it will navigate to app page
     const loginHandler = async () => {
         if (currentUser) {
             navigate("/app");
@@ -39,6 +38,8 @@ const Login = () => {
         setUser({ ...user, password: "" });
         setLoading(false);
     };
+    const navigate = useNavigate();
+    // Checks if user exist or not. If it exist it will navigate to app page
 
     return (
         <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-row">
@@ -72,7 +73,10 @@ const Login = () => {
                     <Button
                         data-testid="login"
                         color="secondary"
-                        onClick={loginHandler}
+                        onClick={() => {
+                            loginHandler()
+                            loginHandlerTest()
+                        }}
                         style={{ marginTop: "28px" }}
                         variant="contained">
                         LOGIN
@@ -87,13 +91,15 @@ const Login = () => {
                         </Link>
                     </span>
                     <div data-testid="loading-wrapper">
-                        {loading && <div data-testid="loading" id="svg-wrapper" className="my-4 flex justify-center">
+                        {loading && <div data-testid="loading" className="my-4 flex justify-center">
                             <Loading />
                         </div>}
                     </div>
-                    {error && <span data-testid="error" id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
-                        Login is Failed
-                    </span>}
+                    <div data-testid="error-wrapper">
+                        {error && <span data-testid="error" className="text-lg font-semibold my-4 flex justify-center text-red-600">
+                            Login is Failed
+                        </span>}
+                    </div>
                 </div>
             </div>
         </div>
