@@ -10,7 +10,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 // TODO: display message for correct or incorrect login with animation
 
 const Login = () => {
-    /* const { loginHandlerTest } = props; */
     const { currentUser } = useContext(AuthContext);
 
     const [error, setError] = useState(false);
@@ -42,11 +41,12 @@ const Login = () => {
     // Checks if user exist or not. If it exist it will navigate to app page
 
     return (
-        <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-row">
+        <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-col">
+            <span id="title" className="mb-12 font-semibold text-4xl text-gray-200 max-sm:text-3xl">Welcome to Chat App</span>
             <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
                 <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
                     <span className="text-center font-semibold text-3xl my-4 max-sm:text-2xl">
-                        Chat App Login
+                        Login
                     </span>
                     <TextField
                         inputProps={{ "data-testid": "email-input" }}
@@ -75,7 +75,6 @@ const Login = () => {
                         color="secondary"
                         onClick={() => {
                             loginHandler()
-                            loginHandlerTest()
                         }}
                         style={{ marginTop: "28px" }}
                         variant="contained">
@@ -84,7 +83,7 @@ const Login = () => {
                     <span className="text-base mt-8 mb-4 text-center">
                         Don't you have an account?
                         <Link
-                            className="font-bold"
+                            className="font-bold max-sm:flex max-sm:justify-center"
                             to="/register"
                             style={{ textDecoration: "none", marginLeft: "7px" }}>
                             Click Here
@@ -102,6 +101,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            <span className="text-gray-300 mt-10">Created By - Altar Ulas</span>
         </div>
     );
 };

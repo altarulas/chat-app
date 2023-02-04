@@ -81,7 +81,7 @@ const Search = () => {
 
   return (
     <div id="search-base" className="w-full h-2/6 flex flex-col">
-      <div id="search-input" className="p-4 w-full">
+      <div id="search-input" className="p-4 w-full max-sm:w-56">
         <input
           className="w-full h-10 rounded-lg pl-2"
           type="text"
