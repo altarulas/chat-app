@@ -76,7 +76,7 @@ const Register = () => {
             <div id="register-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
                 <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
                     <span className="text-center font-semibold text-3xl my-4 max-sm:text-2xl">
-                        Chat App Sign Up
+                        Sign Up
                     </span>
                     <TextField
                         inputProps={{ "data-testid": "name-input" }}
