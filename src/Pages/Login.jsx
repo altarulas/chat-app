@@ -101,7 +101,9 @@ const Login = () => {
                     </div>
                 </div>
             </div>
-            <span className="text-gray-300 mt-10">Created By - Altar Ulas</span>
+            <span className="text-gray-300 mt-10">
+                Created By: Altar Ulas - linkedin.com/in/ismail-altar-ulas/
+            </span>
         </div>
     );
 };

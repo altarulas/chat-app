@@ -39,7 +39,7 @@ const Chats = () => {
           <Loading />
         </div>
       ) : (
-        <div id="chats-base" className="w-full h-4/6 overflow-x-hidden overflow-y-auto bg-gray-600 rounded-xl">
+        <div id="chats-base" className="w-full h-4/6 overflow-x-hidden overflow-y-auto rounded-xl">
           {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
             <div
               id="chat-wrapper"
