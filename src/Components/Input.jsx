@@ -1,3 +1,4 @@
+import { Button, TextField } from "@mui/material";
 import React, { useContext, useState } from "react";
 import {
   Timestamp,
@@ -10,7 +11,6 @@ import { db, storage } from "../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import { AuthContext } from "../Context/Auth";
-import { Button } from "@mui/material";
 import { ChatContext } from "../Context/Chat";
 import Img from "../Images/img.png";
 import { v4 as uuid } from "uuid";
@@ -104,7 +104,7 @@ const Input = () => {
       <div id="input-base" className="h-1/6 w-full flex border-l-4 bg-gray-200 rounded-lg">
         <input
           id="input-text"
-          className="w-3/4 pl-2 bg-gray-200"
+          className="w-3/4 pl-2 bg-gray-200 outline-0"
           type="text"
           placeholder="Type something..."
           onChange={(e) => setInputText(e.target.value)}

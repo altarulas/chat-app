@@ -51,7 +51,7 @@ const Chats = () => {
                             <div id="chat-info" className="flex flex-row">
                                 <span className="text-base mr-6 text-gray-100 font-semibold">
                                     {
-                                        (chat[1].userInfo.displayName.length > 15) ? (chat[1].userInfo?.displayName.substring(0, 15) + "...") : (chat[1].userInfo.displayName)
+                                        (chat[1].userInfo.displayName.length > 12) ? (chat[1].userInfo?.displayName.substring(0, 12) + "...") : (chat[1].userInfo.displayName)
                                     }
                                 </span>
                             </div>
