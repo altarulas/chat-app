@@ -22,10 +22,12 @@ const Input = () => {
   const [inputText, setInputText] = useState("");
   const [image, setImage] = useState(null);
 
+  //sends the input to the userChats
   const handleSend = async () => {
     const text = inputText;
     setInputText("");
 
+    //whenever database gets a text this function will update the current chat in real time
     const chatUpdater = async () => {
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [data.chatId + ".lastMessage"]: {
