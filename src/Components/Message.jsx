@@ -16,7 +16,7 @@ const Message = ({ message }) => {
     <div id="message-base" ref={ref} className={`flex p-8 gap-4 ${message.senderId === currentUser.uid && "flex-row-reverse"}`}>
       <div id="image-wrapper" className="flex flex-col">
         <img
-          className="w-16 h-16 object-cover rounded-2xl"
+          className="w-16 h-16 object-cover rounded-2xl max-sm:w-12 max-sm:h-12"
           src={
             message.senderId === currentUser.uid
               ? currentUser.photoURL

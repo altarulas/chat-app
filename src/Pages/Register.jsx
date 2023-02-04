@@ -72,8 +72,8 @@ const Register = () => {
     }
 
     return (
-        <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-row">
-            <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
+        <div id="register-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-row">
+            <div id="register-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
                 <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
                     <span className="text-center font-semibold text-3xl my-4 max-sm:text-2xl">
                         Chat App Sign Up
@@ -127,7 +127,7 @@ const Register = () => {
                     <span className="text-base mt-8 mb-4 text-center">
                         Do you have an account?
                         <Link
-                            className="font-bold"
+                            className="font-bold max-sm:flex max-sm:justify-center"
                             to="/"
                             style={{ textDecoration: "none", marginLeft: "7px" }}>
                             Click Here
