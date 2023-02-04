@@ -14,7 +14,7 @@ const Navbar = () => {
             <div id='add-friend' className=''>
                 <Dialog />
             </div>
-            <div>
+            <div id='friend-image'>
                 {data.showChat &&
                     <div id='user-wrapper' className='flex items-center'>
                         <img className='w-14 h-12 max-md:w-10 max-md:h-10 rounded-lg object-cover' src={data.user.photoURL} alt="" />

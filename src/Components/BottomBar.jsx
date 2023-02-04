@@ -20,7 +20,10 @@ const BottomBar = () => {
     <div id="bottom-bar-base" className="w-full h-1/6 p-1 px-2 py-2">
       <div id="bar-wrapper" className="w-full h-full bg-black flex items-center rounded-xl px-4" >
         <img className="w-10 h-10 object-cover rounded-xl mr-4" src={currentUser.photoURL} alt="" />
-        <span id="bottom-title" className="text-white">{currentUser.displayName}</span>
+        <span id="bottom-title" className="text-white">
+          {(currentUser.displayName?.length > 8) ? (currentUser.displayName.substring(0, 8) + "...")
+            : (currentUser.displayName)}
+        </span>
         <div className="flex ml-auto">
           <Button
             color="secondary"

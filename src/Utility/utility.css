@@ -20,15 +20,10 @@
 .MuiButton-root.send {
   height: 40px;
 }
-@media (max-width: 1024px) {
-  .MuiButton-root.send {
-    height: 35px;
-  }
-}
 
 @media (max-width: 768px) {
   .MuiButton-root.send {
-    height: 30px;
+    height: 35px;
   }
 }
 

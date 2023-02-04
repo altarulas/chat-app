@@ -83,7 +83,7 @@ const Search = () => {
     <div id="search-base" className="w-full h-2/6 flex flex-col">
       <div id="search-input" className="p-4 w-full max-sm:w-56">
         <input
-          className="w-full h-10 rounded-lg pl-2"
+          className="w-full h-10 rounded-lg pl-2 outline-0"
           type="text"
           placeholder="Find a user"
           onKeyDown={handleKey}
@@ -96,7 +96,10 @@ const Search = () => {
         <div id="user-wrapper" className="flex items-center h-16 p-1 w-full pl-4 cursor-pointer" onClick={handleSelect}>
           <img className="w-12 h-12 object-cover rounded-xl mr-6" src={user.photoURL} alt="" />
           <div className="userChatInfo">
-            <span className="text-white font-semibold">{user.displayName}</span>
+            <span className="text-white font-semibold">
+              {(user.displayName?.length > 12) ? (user.displayName.substring(0, 12) + "...")
+                : (user.displayName)}
+            </span>
           </div>
         </div>
       }
