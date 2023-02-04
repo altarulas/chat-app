@@ -13,6 +13,7 @@ const Chats = () => {
     const [chats, setChats] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    //gets the chat from firestore
     useEffect(() => {
         const getChats = () => {
             const unSub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {

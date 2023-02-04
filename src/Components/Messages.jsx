@@ -13,6 +13,7 @@ const Messages = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    //it will display chat between users
     useEffect(() => {
         setLoading(true);
         const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {

@@ -12,7 +12,7 @@ import Loading from "../Utility/Loading";
 // TODO: display message for correct or incorrect login with animation
 
 const Register = () => {
-    const [serverError, setServerError] = useState(false);
+    const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         displayName: "",
@@ -59,16 +59,20 @@ const Register = () => {
                         navigate("/app");
                     } catch (error) {
                         setLoading(false);
-                        setServerError(true);
+                        setError(true);
                     }
                 });
             });
         } catch (error) {
             setLoading(false);
-            setServerError(true);
+            setError(true);
         }
         setUser({ ...user, displayName: "", email: "", password: "", file: null });
         setLoading(false);
+
+        setTimeout(() => {
+            setError(false);
+        }, 2500)
     }
 
     return (
@@ -138,8 +142,8 @@ const Register = () => {
                             <Loading />
                         </div>}
                     </div>
-                    {serverError && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
-                        Sign Up is Failed
+                    {error && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
+                        Sign Up Has Failed
                     </span>}
                 </div>
             </div>

@@ -19,6 +19,8 @@ const Login = () => {
         password: "",
     });
 
+    const navigate = useNavigate();
+    //checks is there any exist user on database. if it is, navigate to app.
     const loginHandler = async () => {
         if (currentUser) {
             navigate("/app");
@@ -36,9 +38,11 @@ const Login = () => {
         setUser({ ...user, email: "" });
         setUser({ ...user, password: "" });
         setLoading(false);
+
+        setTimeout(() => {
+            setError(false);
+        }, 2500)
     };
-    const navigate = useNavigate();
-    // Checks if user exist or not. If it exist it will navigate to app page
 
     return (
         <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-col">
@@ -96,7 +100,7 @@ const Login = () => {
                     </div>
                     <div data-testid="error-wrapper">
                         {error && <span data-testid="error" className="text-lg font-semibold my-4 flex justify-center text-red-600">
-                            Login is Failed
+                            Login Has Failed
                         </span>}
                     </div>
                 </div>
