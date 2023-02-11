@@ -2,14 +2,14 @@ import React, { useContext } from 'react'
 
 import { ChatContext } from '../Context/Chat';
 import Dialog from "./Dialog";
-import Profile from "./Profile"
+import ProfileMobile from "./ProfileMobile"
 
-const Navbar = () => {
+const ChatBar = () => {
     const { data } = useContext(ChatContext);
     return (
-        <div id='navbar-base' className='h-1/6 w-full rounded-tr-lg bg-black flex items-center justify-between px-4 max-md:rounded-tl-lg'>
+        <div id='chat-bar-base' className='h-1/6 w-full rounded-tr-lg bg-black flex items-center justify-between px-4 max-md:rounded-tl-lg'>
             <div id='profile' className=''>
-                <Profile />
+                <ProfileMobile />
             </div>
             <div id='add-friend' className=''>
                 <Dialog />
@@ -24,4 +24,4 @@ const Navbar = () => {
     )
 }
 
-export default Navbar;
+export default ChatBar;

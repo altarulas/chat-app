@@ -8,7 +8,7 @@ import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
-export default function Profile() {
+export default function ProfileMobile() {
     const { currentUser } = React.useContext(AuthContext);
     const { dispatch } = React.useContext(ChatContext);
 

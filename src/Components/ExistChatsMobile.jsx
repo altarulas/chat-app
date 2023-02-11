@@ -6,7 +6,7 @@ import { ChatContext } from "../Context/Chat";
 import Loading from "../Utility/Loading";
 import { db } from "../firebase";
 
-const Chats = () => {
+const ExistChatsMobile = () => {
     const { currentUser } = useContext(AuthContext);
     const { dispatch } = useContext(ChatContext);
 
@@ -64,4 +64,4 @@ const Chats = () => {
     );
 };
 
-export default Chats;
+export default ExistChatsMobile;

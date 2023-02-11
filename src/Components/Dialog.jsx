@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import Button from '@mui/material/Button';
-import ChatsMobile from './ChatsMobile';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import ExistChatsMobile from './ExistChatsMobile';
 import Search from './Search';
 
 export default function AlertDialog() {
@@ -32,7 +32,7 @@ export default function AlertDialog() {
                     <DialogContent>
                         <Search />
                         <div onClick={handleClose}>
-                            <ChatsMobile />
+                            <ExistChatsMobile />
                         </div>
                     </DialogContent>
                 </div>

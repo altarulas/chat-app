@@ -4,15 +4,14 @@ import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../Context/Auth";
 import Loading from "../Utility/Loading"
+import SnackBar from "../Components/SnackBar";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
-// TODO: display message for correct or incorrect login with animation
 
 const Login = () => {
     const { currentUser } = useContext(AuthContext);
 
-    const [error, setError] = useState(false);
+    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         email: "",
@@ -25,23 +24,29 @@ const Login = () => {
         if (currentUser) {
             navigate("/app");
         }
-        const email = user.email
-        const password = user.password
+
+        const email = user.email;
+        const password = user.password;
+
         try {
             setLoading(true);
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate("/app");
-        } catch (error) {
+            await signInWithEmailAndPassword(auth, email, password).then(() => {
+                setMessage("success");
+                setTimeout(() => {
+                    navigate("/app");
+                }, 2500);
+            });
+        } catch {
+            setMessage("error");
             setLoading(false);
-            setError(true);
         }
-        setUser({ ...user, email: "" });
-        setUser({ ...user, password: "" });
+
+        setUser({ ...user, email: "", password: "" });
         setLoading(false);
 
         setTimeout(() => {
-            setError(false);
-        }, 2500)
+            setMessage("")
+        }, 2500);
     };
 
     return (
@@ -78,7 +83,7 @@ const Login = () => {
                         data-testid="login"
                         color="secondary"
                         onClick={() => {
-                            loginHandler()
+                            loginHandler();
                         }}
                         style={{ marginTop: "28px" }}
                         variant="contained">
@@ -98,16 +103,12 @@ const Login = () => {
                             <Loading />
                         </div>}
                     </div>
-                    <div data-testid="error-wrapper">
-                        {error && <span data-testid="error" className="text-lg font-semibold my-4 flex justify-center text-red-600">
-                            Login Has Failed
-                        </span>}
-                    </div>
                 </div>
             </div>
             <span className="text-gray-300 mt-10">
                 Created By: Altar Ulas - linkedin.com/in/ismail-altar-ulas/
             </span>
+            {message && <SnackBar message={message} />}
         </div>
     );
 };
