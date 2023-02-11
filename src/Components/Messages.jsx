@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 
+import ChatBar from "./ChatBar";
 import { ChatContext } from "../Context/Chat"
 import Loading from "../Utility/Loading";
 import Message from "./Message";
-import Navbar from "./Navbar";
 import { db } from "../firebase";
 
 const Messages = () => {
@@ -27,7 +27,7 @@ const Messages = () => {
 
     return (
         <>
-            <Navbar />
+            <ChatBar />
             {(data.showChat && !loading) ? (
                 <div id="messages-base" className="h-4/6 w-full overflow-scroll bg-gray-200">
                     {messages.map((message) => (
