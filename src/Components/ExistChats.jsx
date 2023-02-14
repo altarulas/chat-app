@@ -43,12 +43,12 @@ const ExistChats = () => {
           {Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
             <div
               id="chat-wrapper"
-              className="flex items-center pl-4 h-20 cursor-pointer max-sm:flex-col max-sm:my-4"
+              className="flex items-center pl-4 h-20 cursor-pointer"
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
               <img id="user-image" className="w-12 h-12 object-cover rounded-xl mr-6" src={chat[1].userInfo.photoURL} alt="" />
-              <div id="chat-info" className="flex flex-row max-sm:hidden">
+              <div id="chat-info" className="flex flex-row">
                 <span id="user-name" className="text-base mr-6 text-gray-100 font-semibold">
                   {
                     (chat[1].userInfo.displayName.length > 12) ? (chat[1].userInfo?.displayName.substring(0, 12) + "...") : (chat[1].userInfo.displayName)

@@ -39,7 +39,7 @@ const Messages = () => {
                     {loading ? (
                         <Loading />
                     ) : (
-                        <span id="title" className="text-3xl font-semibold">
+                        <span id="title" className="text-3xl font-semibold max-sm:text-2xl">
                             Welcome to Chat App!
                         </span>
                     )}

@@ -5,16 +5,11 @@ import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 const SnackBar = (props) => {
     const { message } = props;
-    const [showSnackbar, setShowSnackbar] = useState(true);
+    const [showSnackbar, setShowSnackbar] = useState();
 
-    let text;
-    if (message === "success") {
-        text = "Information's are correct";
-    } else if (message === "error") {
-        text = "Information's are not correct";
-    } else {
-        text = "Something went wrong";
-    }
+    const color = message.color;
+    const text = message.text;
+    const icon = message.icon;
 
     useEffect(() => {
         setShowSnackbar(true);
@@ -22,10 +17,11 @@ const SnackBar = (props) => {
 
     return (
         showSnackbar && (
-            <div id='snackbar' className={`fixed bottom-4 left-4 text-white p-4 rounded-md 
-            ${(message === "success") ? ("bg-green-700") : ("bg-red-700")}`}>
+            <div id='my-snack-bar'
+                className={`fixed bottom-4 left-4 text-white p-4 rounded-md ${(color === "green") && "bg-green-700"} ${(color === "red") && "bg-red-700"}`}>
                 <span id='message'>
-                    {message === "success" ? (<CheckIcon />) : (<HighlightOffIcon />)}
+                    {icon === "success" && <CheckIcon />}
+                    {icon === "error" && <HighlightOffIcon />}
                     <span className='ml-4'>{text}</span>
                 </span>
             </div >
