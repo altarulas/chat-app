@@ -3,7 +3,8 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import ExistChatsMobile from './ExistChatsMobile';
+import ExistChats from './ExistChats';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import Search from './Search';
 
 export default function AlertDialog() {
@@ -19,8 +20,15 @@ export default function AlertDialog() {
 
     return (
         <div>
-            <Button variant="contained" color='secondary' onClick={handleClickOpen}>
-                <img src="https://img.icons8.com/external-tanah-basah-basic-outline-tanah-basah/24/null/external-friends-user-tanah-basah-basic-outline-tanah-basah.png" alt='' />
+            <Button sx={{
+                bgcolor: "white",
+                "&:hover": {
+                    bgcolor: "gray"
+                }
+            }} variant="contained" color='primary' onClick={handleClickOpen}>
+                <PersonAddIcon fontSize='medium' sx={{
+                    color: "black"
+                }} />
             </Button>
             <Dialog
                 open={open}
@@ -32,7 +40,7 @@ export default function AlertDialog() {
                     <DialogContent>
                         <Search />
                         <div onClick={handleClose}>
-                            <ExistChatsMobile />
+                            <ExistChats />
                         </div>
                     </DialogContent>
                 </div>

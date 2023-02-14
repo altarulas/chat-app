@@ -11,7 +11,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
     const { currentUser } = useContext(AuthContext);
 
-    const [message, setMessage] = useState("");
+    const [message, setMessage] = useState({ color: "", text: "", icon: "" });
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         email: "",
@@ -30,22 +30,31 @@ const Login = () => {
 
         try {
             setLoading(true);
-            await signInWithEmailAndPassword(auth, email, password).then(() => {
-                setMessage("success");
-                setTimeout(() => {
-                    navigate("/app");
-                }, 2500);
+            await signInWithEmailAndPassword(auth, email, password)
+            setMessage({
+                color: "green",
+                text: "Information's are correct",
+                icon: "success",
             });
+            setTimeout(() => {
+                navigate("/app");
+            }, 2000);
         } catch {
-            setMessage("error");
+            setMessage({
+                color: "red",
+                text: "Information's are not correct",
+                icon: "error",
+            });
             setLoading(false);
         }
 
-        setUser({ ...user, email: "", password: "" });
         setLoading(false);
-
         setTimeout(() => {
-            setMessage("")
+            setMessage({
+                color: "",
+                text: "",
+                icon: "",
+            });
         }, 2500);
     };
 
@@ -63,6 +72,7 @@ const Login = () => {
                         id="standard-basic-1"
                         label="E-mail"
                         variant="standard"
+                        value={user.email}
                         onChange={(e) => {
                             setUser({ ...user, email: e.target.value });
                         }}
@@ -105,9 +115,10 @@ const Login = () => {
                     </div>
                 </div>
             </div>
-            <span className="text-gray-300 mt-10">
-                Created By: Altar Ulas - linkedin.com/in/ismail-altar-ulas/
-            </span>
+            <div className="text-gray-300 mt-10 flex flex-col items-center">
+                <span className="mb-1">Created By : Altar Ulas</span>
+                <span>linkedin.com/in/ismail-altar-ulas/</span>
+            </div>
             {message && <SnackBar message={message} />}
         </div>
     );

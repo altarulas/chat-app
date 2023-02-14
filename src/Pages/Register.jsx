@@ -6,13 +6,14 @@ import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useRef, useState } from "react";
 
-import Add from "../Images/add.png";
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Loading from "../Components/Loading";
+import SnackBar from "../Components/SnackBar";
 
 // TODO: display message for correct or incorrect login with animation
 
 const Register = () => {
-    const [error, setError] = useState(false);
+    const [message, setMessage] = useState({ color: "", text: "", icon: "" });
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
         displayName: "",
@@ -21,6 +22,10 @@ const Register = () => {
         image: undefined,
     });
 
+    const handleImageChange = (event) => {
+        setUser({ ...user, image: event.target.files[0] });
+    };
+
     const navigate = useNavigate();
     const imageRef = useRef(null);
     // Makes user register
@@ -28,50 +33,84 @@ const Register = () => {
         const displayName = user.displayName
         const email = user.email
         const password = user.password
-        const image = imageRef.current.files[0];
+        const image = user.image
 
-        try {
-            setLoading(true);
-            // Creates user 
-            const response = await createUserWithEmailAndPassword(auth, email, password);
-            // Creates storage for images with unique id
-            const date = new Date().getTime();
-            //Creates a reference to a location within the storage service, using the concatenated string as the path
-            const storageRef = ref(storage, `${displayName + date}`);
-            // Uploads images
-            await uploadBytesResumable(storageRef, image).then(() => {
-                getDownloadURL(storageRef).then(async (downloadURL) => {
-                    try {
-                        //Update profile
-                        await updateProfile(response.user, {
-                            displayName,
-                            photoURL: downloadURL,
+        if (image) {
+            try {
+                setLoading(true);
+                // Creates user 
+                if (displayName) {
+                    const response = await createUserWithEmailAndPassword(auth, email, password);
+                    // Creates storage for images with unique id
+                    const date = new Date().getTime();
+                    //Creates a reference to a location within the storage service, using the concatenated string as the path
+                    const storageRef = ref(storage, `${displayName + date}`);
+                    // Uploads images
+                    await uploadBytesResumable(storageRef, image).then(() => {
+                        getDownloadURL(storageRef).then(async (downloadURL) => {
+                            try {
+                                //Update profile
+                                await updateProfile(response.user, {
+                                    displayName,
+                                    photoURL: downloadURL,
+                                });
+                                //Creates user on firestore
+                                await setDoc(doc(db, "users", response.user.uid), {
+                                    uid: response.user.uid,
+                                    displayName,
+                                    email,
+                                    photoURL: downloadURL,
+                                });
+                                //Creates empty user chats on firestore
+                                await setDoc(doc(db, "userChats", response.user.uid), {});
+                                setMessage({
+                                    color: "green",
+                                    text: "Successfully registered",
+                                    icon: "success",
+                                });
+                                setTimeout(() => {
+                                    navigate("/app");
+                                }, 2000);
+                            } catch {
+                                setLoading(false);
+                                setMessage({
+                                    color: "red",
+                                    text: "Image failed to upload",
+                                    icon: "error",
+                                });
+                            }
                         });
-                        //Creates user on firestore
-                        await setDoc(doc(db, "users", response.user.uid), {
-                            uid: response.user.uid,
-                            displayName,
-                            email,
-                            photoURL: downloadURL,
-                        });
-                        //Creates empty user chats on firestore
-                        await setDoc(doc(db, "userChats", response.user.uid), {});
-                        navigate("/app");
-                    } catch (error) {
-                        setLoading(false);
-                        setError(true);
-                    }
+                    });
+                } else {
+                    setMessage({
+                        color: "red",
+                        text: "Incorrect or missing inputs",
+                        icon: "error",
+                    });
+                }
+            } catch {
+                setLoading(false);
+                setMessage({
+                    color: "red",
+                    text: "Incorrect or missing inputs",
+                    icon: "error",
                 });
+            }
+        } else {
+            setMessage({
+                color: "red",
+                text: "Image failed to upload or there is no image",
+                icon: "error",
             });
-        } catch (error) {
-            setLoading(false);
-            setError(true);
         }
-        setUser({ ...user, displayName: "", email: "", password: "", file: null });
-        setLoading(false);
 
+        setLoading(false);
         setTimeout(() => {
-            setError(false);
+            setMessage({
+                color: "",
+                text: "",
+                icon: "",
+            });
         }, 2500)
     }
 
@@ -115,16 +154,19 @@ const Register = () => {
                         }}
                     />
                     <div data-testid="image-upload" id="image-upload" className="w-44 mt-4">
-                        <input style={{ display: "none" }} ref={imageRef} type="file" id="file" />
+                        <input style={{ display: "none" }} ref={imageRef} type="file" id="file" onChange={handleImageChange} />
                         <label htmlFor="file" className="flex items-center cursor-pointer">
-                            <img src={Add} alt="" className="bg-indigo-600 rounded-md" />
+                            <AccountBoxIcon sx={{
+                                width: "50px",
+                                height: "50px",
+                            }} />
                             <span className="ml-4 font-semibold">Add an avatar</span>
                         </label>
                     </div>
                     <Button
                         color="secondary"
                         onClick={registerHandler}
-                        style={{ marginTop: "28px" }}
+                        sx={{ marginTop: "28px" }}
                         variant="contained">
                         SIGN UP
                     </Button>
@@ -142,11 +184,9 @@ const Register = () => {
                             <Loading />
                         </div>}
                     </div>
-                    {error && <span id="error-wrapper" className="text-lg font-semibold my-4 flex justify-center text-red-600">
-                        Sign Up Has Failed
-                    </span>}
                 </div>
             </div>
+            {message && <SnackBar message={message} />}
         </div>
     );
 };
