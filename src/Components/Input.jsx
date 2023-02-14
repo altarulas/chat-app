@@ -134,7 +134,7 @@ const Input = () => {
           </label>
           <button
             id="send-button"
-            className="text-sm py-2 px-4 rounded-lg bg-black text-white hover:bg-gray-400 max-lg:mb-2 max-lg:text-sm max-md:text-xs max-sm:mb-1"
+            className="cursor-pointer text-sm font-bold py-2 px-4 rounded-lg bg-black text-white hover:bg-gray-400 max-lg:mb-2 max-lg:text-sm max-md:text-xs max-sm:mb-1"
             onClick={handleSend}
             {...(!data.showChat && { disabled: true })}
           >
