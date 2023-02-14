@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useRef, useState } from "react";
 
 import Add from "../Images/add.png";
-import Loading from "../Utility/Loading";
+import Loading from "../Components/Loading";
 
 // TODO: display message for correct or incorrect login with animation
 

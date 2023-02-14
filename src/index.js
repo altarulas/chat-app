@@ -1,5 +1,5 @@
 import "./index.css";
-import "./Utility/utility.css";
+import "./Utility/style.css";
 
 import App from "./App";
 import React from "react";
