@@ -3,7 +3,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 
 import ChatBar from "./ChatBar";
 import { ChatContext } from "../Context/Chat"
-import Loading from "../Utility/Loading";
+import Loading from "../Components/Loading";
 import Message from "./Message";
 import { db } from "../firebase";
 
@@ -39,7 +39,7 @@ const Messages = () => {
                     {loading ? (
                         <Loading />
                     ) : (
-                        <span className="text-3xl font-semibold">
+                        <span id="title" className="text-3xl font-semibold">
                             Welcome to Chat App!
                         </span>
                     )}

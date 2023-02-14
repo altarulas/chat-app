@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../Context/Auth";
-import Loading from "../Utility/Loading"
+import Loading from "../Components/Loading"
 import SnackBar from "../Components/SnackBar";
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";

@@ -1,0 +1,23 @@
+/***animations***/
+
+#login-form {
+  animation: 0.5s ease-out 0s 1 slideInFromBottom;
+}
+#register-form {
+  animation: 0.5s ease-out 0s 1 slideInFromBottom;
+}
+
+#snackbar {
+  animation: 0.5s ease-out 0s 1 slideInFromBottom;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

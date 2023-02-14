@@ -43,7 +43,7 @@ export default function ProfileMobile() {
                 onClick={handleClick}
                 className="text-white cursor-pointer"
             >
-                <img className="w-10 h-10 object-cover rounded-xl mr-4" src={currentUser.photoURL} alt="" />
+                <img id='user-image' className="w-10 h-10 object-cover rounded-xl mr-4" src={currentUser.photoURL} alt="" />
             </div>
             <Menu
                 id="basic-menu"

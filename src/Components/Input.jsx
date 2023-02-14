@@ -114,7 +114,7 @@ const Input = () => {
           onKeyDown={handleKeyboard}
           {...(!data.showChat && { disabled: true })}
         />
-        <div className="w-1/4 flex items-center justify-center px-6 max-lg:px-2 border-l-2 border-gray-300 justify-between max-md:flex-col max-md:py-2">
+        <div id="input-buttons" className="w-1/4 flex items-center justify-center px-6 max-lg:px-2 border-l-2 border-gray-300 justify-between max-lg:flex-col max-md:py-2 max-sm:flex-row max-xs:flex-col">
           <label
             id="image-upload"
             className="cursor-pointer"
@@ -129,19 +129,18 @@ const Input = () => {
               onChange={(e) => setImage(e.target.files[0])}
               {...(!data.showChat && { disabled: true })}
             />
-            <div className="w-8 max-md:w-6">
+            <div className="w-8 max-md:w-7 max-md:mb-2 max-lg:mt-1">
               <img className={`${!data.showChat && ("cursor-not-allowed")} w-full`} src={Img} alt="" />
             </div>
           </label>
-          <Button
-            className="send"
-            color="secondary"
-            variant="contained"
+          <button
+            id="send-button"
+            className="text-sm py-2 px-4 rounded-lg bg-black text-white hover:bg-gray-400 max-lg:mb-2 max-lg:text-sm max-md:text-xs max-sm:mb-1"
             onClick={handleSend}
             {...(!data.showChat && { disabled: true })}
           >
-            <img src="https://img.icons8.com/fluency-systems-filled/20/null/sent.png" alt="" />
-          </Button>
+            SEND
+          </button>
         </div>
       </div>
     </>

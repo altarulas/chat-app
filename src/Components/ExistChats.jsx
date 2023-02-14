@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "../Context/Auth";
 import { ChatContext } from "../Context/Chat";
-import Loading from "../Utility/Loading";
+import Loading from "../Components/Loading";
 import { db } from "../firebase";
 
 const ExistChats = () => {
@@ -47,15 +47,15 @@ const ExistChats = () => {
               key={chat[0]}
               onClick={() => handleSelect(chat[1].userInfo)}
             >
-              <img className="w-12 h-12 object-cover rounded-xl mr-6" src={chat[1].userInfo.photoURL} alt="" />
+              <img id="user-image" className="w-12 h-12 object-cover rounded-xl mr-6" src={chat[1].userInfo.photoURL} alt="" />
               <div id="chat-info" className="flex flex-row max-sm:hidden">
-                <span className="text-base mr-6 text-gray-100 font-semibold">
+                <span id="user-name" className="text-base mr-6 text-gray-100 font-semibold">
                   {
                     (chat[1].userInfo.displayName.length > 12) ? (chat[1].userInfo?.displayName.substring(0, 12) + "...") : (chat[1].userInfo.displayName)
                   }
                 </span>
                 {!((chat[1].lastMessage?.text) === undefined) &&
-                  <p className="text-gray-400 font-semibold max-lg:hidden">
+                  <p id="last-message" className="text-gray-400 font-semibold max-lg:hidden">
                     {
                       (chat[1].lastMessage?.text.length > 15) ? (chat[1].lastMessage?.text.substring(0, 15) + "...")
                         :
