@@ -5,14 +5,14 @@ import { RecaptchaVerifier, signInWithEmailAndPassword, signInWithPhoneNumber } 
 
 import { AuthContext } from "../Context/Auth";
 import Loading from "../Components/Loading"
-import SlideDialog from "../Components/SlideDialog";
+import SMSDialog from "../Components/SMSDialog";
 import SnackBar from "../Components/SnackBar";
 import { auth } from "../firebase";
 
 const Login = () => {
     const { currentUser } = useContext(AuthContext);
 
-    const [loginClick, setLoginClick] = useState(false);
+    const [dialog, setDialog] = useState(false);
     const [sms, setSMS] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -26,19 +26,27 @@ const Login = () => {
     const authHandler = async () => {
         const email = user.email;
         const password = user.password;
-
-        setPhoneNumber("");
         setLoading(true);
 
         await signInWithEmailAndPassword(auth, email, password)
-        setMessage({
-            color: "green",
-            text: "Successfully logged in",
-            icon: "success",
-        });
-        setTimeout(() => {
-            navigate("/app");
-        }, 2000);
+            .then(() => {
+                setMessage({
+                    color: "green",
+                    text: "Successfully logged in",
+                    icon: "success",
+                });
+                setTimeout(() => {
+                    navigate("/app");
+                }, 2000);
+            }).catch(() => {
+                setDialog(false);
+                setLoading(false);
+                setMessage({
+                    color: "red",
+                    text: "Information's are not correct",
+                    icon: "error",
+                });
+            })
     }
 
     const onCaptchVerify = () => {
@@ -66,22 +74,19 @@ const Login = () => {
             });
     }
 
-    //FIXME:  with wrong auth after entering sms code, error message should appear
     const OTPHandler = () => {
-        try {
-            window.confirmationResult
-                .confirm(sms)
-                .then(async () => {
-                    authHandler();
-                })
-        } catch {
-            setMessage({
-                color: "red",
-                text: "Information's are not correct",
-                icon: "error",
-            });
-            setLoading(false);
-        }
+        window.confirmationResult
+            .confirm(sms)
+            .then(() => { authHandler() })
+            .catch(() => {
+                setLoading(false);
+                setDialog(false);
+                setMessage({
+                    color: "red",
+                    text: "SMS code is not correct",
+                    icon: "error",
+                });
+            })
     }
 
     const navigate = useNavigate();
@@ -90,24 +95,15 @@ const Login = () => {
         const email = user.email;
         const password = user.password;
 
-        if (currentUser && email === "" && password === "" && phoneNumber === "") {
+        if (currentUser && (email === "" && password === "" && phoneNumber === "")) {
             navigate("/app");
         } else {
-            try {
-                if ((phoneNumber.length === 10) && email && password) {
-                    setLoginClick(true);
-                    messageSendHandler();
-                } else if (email && password) {
-                    authHandler();
-                } else {
-                    setMessage({
-                        color: "red",
-                        text: "Information's are not correct",
-                        icon: "error",
-                    });
-                    setLoading(false);
-                }
-            } catch {
+            if ((phoneNumber.length === 10) && email && password) {
+                setDialog(true);
+                messageSendHandler();
+            } else if (email && password) {
+                authHandler();
+            } else {
                 setMessage({
                     color: "red",
                     text: "Information's are not correct",
@@ -115,18 +111,17 @@ const Login = () => {
                 });
                 setLoading(false);
             }
-
-            setLoading(false);
-            setTimeout(() => {
-                setMessage({
-                    color: "",
-                    text: "",
-                    icon: "",
-                });
-            }, 2500);
         }
 
-    };
+        setLoading(false);
+        setTimeout(() => {
+            setMessage({
+                color: "",
+                text: "",
+                icon: "",
+            });
+        }, 2500);
+    }
 
     return (
         <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-col">
@@ -197,7 +192,7 @@ const Login = () => {
                 <span>linkedin.com/in/ismail-altar-ulas/</span>
             </div>
             {message && <SnackBar message={message} />}
-            {loginClick && <SlideDialog setSMS={setSMS} OTPHandler={OTPHandler} />}
+            {!dialog && <SMSDialog setSMS={setSMS} OTPHandler={OTPHandler} />}
             <div id="recaptcha-container"></div>
         </div >
     );
