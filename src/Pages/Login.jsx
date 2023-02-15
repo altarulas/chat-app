@@ -1,15 +1,20 @@
 import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useContext, useState } from "react";
+import { RecaptchaVerifier, signInWithEmailAndPassword, signInWithPhoneNumber } from "firebase/auth";
 
 import { AuthContext } from "../Context/Auth";
 import Loading from "../Components/Loading"
+import SlideDialog from "../Components/SlideDialog";
 import SnackBar from "../Components/SnackBar";
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
     const { currentUser } = useContext(AuthContext);
+
+    const [loginClick, setLoginClick] = useState(false);
+    const [sms, setSMS] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
 
     const [message, setMessage] = useState({ color: "", text: "", icon: "" });
     const [loading, setLoading] = useState(false);
@@ -18,27 +23,57 @@ const Login = () => {
         password: "",
     });
 
-    const navigate = useNavigate();
-    //checks is there any exist user on database. if it is, navigate to app.
-    const loginHandler = async () => {
-        if (currentUser) {
-            navigate("/app");
-        }
-
+    const authHandler = async () => {
         const email = user.email;
         const password = user.password;
 
-        try {
-            setLoading(true);
-            await signInWithEmailAndPassword(auth, email, password)
-            setMessage({
-                color: "green",
-                text: "Information's are correct",
-                icon: "success",
+        setPhoneNumber("");
+        setLoading(true);
+
+        await signInWithEmailAndPassword(auth, email, password)
+        setMessage({
+            color: "green",
+            text: "Successfully logged in",
+            icon: "success",
+        });
+        setTimeout(() => {
+            navigate("/app");
+        }, 2000);
+    }
+
+    const onCaptchVerify = () => {
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = new RecaptchaVerifier(
+                "recaptcha-container",
+                { size: "invisible" },
+                auth,
+            );
+        }
+    }
+
+    const messageSendHandler = () => {
+        onCaptchVerify();
+
+        const appVerifier = window.recaptchaVerifier;
+        const finalPhoneNumber = "+90" + phoneNumber;
+
+        signInWithPhoneNumber(auth, finalPhoneNumber, appVerifier)
+            .then((confirmationResult) => {
+                window.confirmationResult = confirmationResult;
+            })
+            .catch((error) => {
+                console.log(error)
             });
-            setTimeout(() => {
-                navigate("/app");
-            }, 2000);
+    }
+
+    //FIXME:  with wrong auth after entering sms code, error message should appear
+    const OTPHandler = () => {
+        try {
+            window.confirmationResult
+                .confirm(sms)
+                .then(async () => {
+                    authHandler();
+                })
         } catch {
             setMessage({
                 color: "red",
@@ -47,23 +82,58 @@ const Login = () => {
             });
             setLoading(false);
         }
+    }
 
-        setLoading(false);
-        setTimeout(() => {
-            setMessage({
-                color: "",
-                text: "",
-                icon: "",
-            });
-        }, 2500);
+    const navigate = useNavigate();
+    //checks is there any exist user on database. if it is, navigate to app.
+    const loginHandler = async () => {
+        const email = user.email;
+        const password = user.password;
+
+        if (currentUser && email === "" && password === "" && phoneNumber === "") {
+            navigate("/app");
+        } else {
+            try {
+                if ((phoneNumber.length === 10) && email && password) {
+                    setLoginClick(true);
+                    messageSendHandler();
+                } else if (email && password) {
+                    authHandler();
+                } else {
+                    setMessage({
+                        color: "red",
+                        text: "Information's are not correct",
+                        icon: "error",
+                    });
+                    setLoading(false);
+                }
+            } catch {
+                setMessage({
+                    color: "red",
+                    text: "Information's are not correct",
+                    icon: "error",
+                });
+                setLoading(false);
+            }
+
+            setLoading(false);
+            setTimeout(() => {
+                setMessage({
+                    color: "",
+                    text: "",
+                    icon: "",
+                });
+            }, 2500);
+        }
+
     };
 
     return (
         <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-col">
-            <span id="title" className="mb-12 font-semibold text-4xl text-gray-200 max-sm:text-3xl">Welcome to Chat App</span>
+            <span id="title" className="mb-8 font-semibold text-4xl text-gray-200 max-sm:text-2xl">Welcome to Chat App</span>
             <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
                 <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
-                    <span className="text-center font-semibold text-3xl my-4 max-sm:text-2xl">
+                    <span className="text-center font-semibold text-3xl my-2 max-sm:text-2xl">
                         Login
                     </span>
                     <TextField
@@ -89,13 +159,22 @@ const Login = () => {
                             setUser({ ...user, password: e.target.value });
                         }}
                     />
+                    <div className="mt-4 flex flex-col border-2 border-gray-500 rounded-lg py-4 px-6 max-sm:px-2 max-sm:py-2">
+                        <span className="font-bold">Login with SMS verification (optional)</span>
+                        <TextField
+                            margin="normal"
+                            id="phone-standard-basic-3"
+                            label="Phone Number"
+                            variant="standard"
+                            onChange={(e) => {
+                                setPhoneNumber(e.target.value);
+                            }} />
+                    </div>
                     <Button
                         data-testid="login"
                         color="secondary"
-                        onClick={() => {
-                            loginHandler();
-                        }}
-                        style={{ marginTop: "28px" }}
+                        onClick={loginHandler}
+                        style={{ marginTop: "24px" }}
                         variant="contained">
                         LOGIN
                     </Button>
@@ -109,18 +188,18 @@ const Login = () => {
                         </Link>
                     </span>
                     <div data-testid="loading-wrapper">
-                        {loading && <div data-testid="loading" className="my-4 flex justify-center">
-                            <Loading />
-                        </div>}
+                        <Loading loading={loading} />
                     </div>
                 </div>
             </div>
-            <div className="text-gray-300 mt-10 flex flex-col items-center">
-                <span className="mb-1">Created By : Altar Ulas</span>
+            <div className="text-gray-300 mt-4 flex items-center max-sm:mt-2 max-sm:flex-row max-sm:text-xs">
+                <span className="mr-1">Created By : Altar Ulas |</span>
                 <span>linkedin.com/in/ismail-altar-ulas/</span>
             </div>
             {message && <SnackBar message={message} />}
-        </div>
+            {loginClick && <SlideDialog setSMS={setSMS} OTPHandler={OTPHandler} />}
+            <div id="recaptcha-container"></div>
+        </div >
     );
 };
 
