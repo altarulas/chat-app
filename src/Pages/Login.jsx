@@ -192,7 +192,7 @@ const Login = () => {
                 <span>linkedin.com/in/ismail-altar-ulas/</span>
             </div>
             {message && <SnackBar message={message} />}
-            {!dialog && <SMSDialog setSMS={setSMS} OTPHandler={OTPHandler} />}
+            {dialog && <SMSDialog setSMS={setSMS} OTPHandler={OTPHandler} />}
             <div id="recaptcha-container"></div>
         </div >
     );
