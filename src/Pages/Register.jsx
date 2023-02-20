@@ -181,7 +181,7 @@ const Register = () => {
                     </span>
                     <div data-testid="loading-wrapper">
                         {loading && <div data-testid="loading" id="svg-wrapper" className="my-4 flex justify-center">
-                            <Loading />
+                            <Loading loading={loading} />
                         </div>}
                     </div>
                 </div>
