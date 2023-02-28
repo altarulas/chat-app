@@ -1,4 +1,4 @@
-import { AUTH_FAIL, AUTH_PROCESS, AUTH_SUCCESS, CLEAN_MESSAGE, CLEAN_STATES, INITIAL_STATE, OTP_FAIL, loginReducer } from "../Hooks/loginReducer";
+import { AUTH_FAIL, AUTH_PROCESS, AUTH_SUCCESS, CLEAN_MESSAGE, CLEAN_STATES, INITIAL_STATE, OTP_FAIL, SET_USER, loginReducer } from "../Hooks/loginReducer";
 import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useContext, useReducer, useState } from "react";
@@ -181,7 +181,7 @@ const Login = () => {
                         value={state.user.email}
                         onChange={(e) => {
                             dispatch({
-                                type: "SET_USER",
+                                type: SET_USER,
                                 payload: {
                                     name: e.target.name,
                                     value: e.target.value,
@@ -201,7 +201,7 @@ const Login = () => {
                         onChange={(e) => {
                             /* setUser({ ...user, password: e.target.value }); */
                             dispatch({
-                                type: "SET_USER",
+                                type: SET_USER,
                                 payload: {
                                     name: e.target.name,
                                     value: e.target.value,
@@ -220,7 +220,7 @@ const Login = () => {
                             onChange={(e) => {
                                 /* setUser({ ...user, phoneNumber: e.target.value }); */
                                 dispatch({
-                                    type: "SET_USER",
+                                    type: SET_USER,
                                     payload: {
                                         name: e.target.name,
                                         value: e.target.value,
