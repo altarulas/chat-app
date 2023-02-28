@@ -1,10 +1,11 @@
 import { Button, TextField } from "@mui/material";
+import { CLEAN_STATES, INITIAL_STATE, REGISTER_FAIL, REGISTER_PROCESS, REGISTER_SUCCESS, SET_USER, registerReducer } from "../Hooks/registerReducer";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { useRef, useState } from "react";
+import { useReducer, useRef } from "react";
 
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import Loading from "../Components/Loading";
@@ -13,33 +14,34 @@ import SnackBar from "../Components/SnackBar";
 // TODO: display message for correct or incorrect login with animation
 
 const Register = () => {
-    const [message, setMessage] = useState({ color: "", text: "", icon: "" });
-    const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState({
-        displayName: "",
-        email: "",
-        password: "",
-        image: undefined,
-    });
+    const [state, dispatch] = useReducer(registerReducer, INITIAL_STATE);
 
-    const handleImageChange = (event) => {
-        setUser({ ...user, image: event.target.files[0] });
+    const handleImageChange = (e) => {
+        /* setUser({ ...user, image: e.target.files[0] }); */
+        dispatch({
+            type: SET_USER,
+            payload: {
+                name: e.target.name,
+                value: e.target.files[0],
+            }
+        })
     };
 
     const navigate = useNavigate();
+
     const imageRef = useRef(null);
     // Makes user register
     const registerHandler = async () => {
-        const displayName = user.displayName
-        const email = user.email
-        const password = user.password
-        const image = user.image
+        const displayName = state.user.displayName
+        const email = state.user.email
+        const password = state.user.password
+        const image = state.user.image
 
         if (image) {
-            try {
-                setLoading(true);
-                // Creates user 
-                if (displayName) {
+            dispatch({ type: REGISTER_PROCESS, payload: true });
+            // Creates user 
+            if (displayName && email && password) {
+                try {
                     const response = await createUserWithEmailAndPassword(auth, email, password);
                     // Creates storage for images with unique id
                     const date = new Date().getTime();
@@ -62,56 +64,88 @@ const Register = () => {
                                     photoURL: downloadURL,
                                 });
                                 //Creates empty user chats on firestore
-                                await setDoc(doc(db, "userChats", response.user.uid), {});
-                                setMessage({
-                                    color: "green",
-                                    text: "Successfully registered",
-                                    icon: "success",
-                                });
+                                await setDoc(doc(db, "userChats", response.user.uid), {})
+
+                                setTimeout(() => {
+                                    dispatch({
+                                        type: REGISTER_SUCCESS, payload: {
+                                            loading: false,
+                                            message: {
+                                                color: "green",
+                                                text: "Successfully registered",
+                                                icon: "success",
+                                            }
+                                        }
+                                    })
+                                }, 500)
+
                                 setTimeout(() => {
                                     navigate("/app");
-                                }, 2000);
+                                }, 2000)
+
                             } catch {
-                                setLoading(false);
-                                setMessage({
-                                    color: "red",
-                                    text: "Image failed to upload",
-                                    icon: "error",
-                                });
+                                dispatch({
+                                    type: REGISTER_FAIL, payload: {
+                                        loading: false,
+                                        message: {
+                                            color: "red",
+                                            text: "Image failed to upload",
+                                            icon: "error",
+                                        }
+                                    }
+                                })
                             }
                         });
                     });
-                } else {
-                    setMessage({
-                        color: "red",
-                        text: "Incorrect or missing inputs",
-                        icon: "error",
-                    });
+                } catch {
+                    dispatch({
+                        type: REGISTER_FAIL, payload: {
+                            loading: false,
+                            message: {
+                                color: "red",
+                                text: "Information's are not valid or something went wrong",
+                                icon: "error",
+                            }
+                        }
+                    })
                 }
-            } catch {
-                setLoading(false);
-                setMessage({
-                    color: "red",
-                    text: "Incorrect or missing inputs",
-                    icon: "error",
-                });
+            } else {
+                dispatch({
+                    type: REGISTER_FAIL, payload: {
+                        loading: false,
+                        message: {
+                            color: "red",
+                            text: "Missing inputs",
+                            icon: "error",
+                        }
+                    }
+                })
             }
         } else {
-            setMessage({
-                color: "red",
-                text: "Image failed to upload or there is no image",
-                icon: "error",
-            });
+            dispatch({
+                type: REGISTER_FAIL, payload: {
+                    loading: false,
+                    message: {
+                        color: "red",
+                        text: "Image failed to upload or there is no image",
+                        icon: "error",
+                    }
+                }
+            })
         }
 
-        setLoading(false);
         setTimeout(() => {
-            setMessage({
-                color: "",
-                text: "",
-                icon: "",
-            });
-        }, 2500)
+            dispatch({
+                type: CLEAN_STATES, payload: {
+                    loading: false,
+                    message: {
+                        color: "",
+                        text: "",
+                        icon: "",
+                    }
+                }
+            })
+        }, 2000)
     }
 
     return (
@@ -122,26 +156,41 @@ const Register = () => {
                         Sign Up
                     </span>
                     <TextField
+                        name="displayName"
                         inputProps={{ "data-testid": "name-input" }}
                         margin="normal"
                         id="standard-basic-3"
                         label="Name"
                         variant="standard"
                         onChange={(e) => {
-                            setUser({ ...user, displayName: e.target.value });
+                            dispatch({
+                                type: SET_USER,
+                                payload: {
+                                    name: e.target.name,
+                                    value: e.target.value,
+                                }
+                            })
                         }}
                     />
                     <TextField
+                        name="email"
                         inputProps={{ "data-testid": "email-input" }}
                         margin="normal"
                         id="standard-basic-4"
                         label="E-mail"
                         variant="standard"
                         onChange={(e) => {
-                            setUser({ ...user, email: e.target.value });
+                            dispatch({
+                                type: SET_USER,
+                                payload: {
+                                    name: e.target.name,
+                                    value: e.target.value,
+                                }
+                            })
                         }}
                     />
                     <TextField
+                        name="password"
                         inputProps={{ "data-testid": "password-input" }}
                         margin="normal"
                         id="password-standard-basic-5"
@@ -150,11 +199,17 @@ const Register = () => {
                         autoComplete="current-password"
                         variant="standard"
                         onChange={(e) => {
-                            setUser({ ...user, password: e.target.value });
+                            dispatch({
+                                type: SET_USER,
+                                payload: {
+                                    name: e.target.name,
+                                    value: e.target.value,
+                                }
+                            })
                         }}
                     />
                     <div data-testid="image-upload" id="image-upload" className="w-44 mt-4">
-                        <input style={{ display: "none" }} ref={imageRef} type="file" id="file" onChange={handleImageChange} />
+                        <input name="image" style={{ display: "none" }} ref={imageRef} type="file" id="file" onChange={handleImageChange} />
                         <label htmlFor="file" className="flex items-center cursor-pointer">
                             <AccountBoxIcon sx={{
                                 width: "50px",
@@ -180,13 +235,13 @@ const Register = () => {
                         </Link>
                     </span>
                     <div data-testid="loading-wrapper">
-                        {loading && <div data-testid="loading" id="svg-wrapper" className="my-4 flex justify-center">
-                            <Loading loading={loading} />
+                        {state.loading && <div data-testid="loading" id="svg-wrapper" className="my-4 flex justify-center">
+                            <Loading loading={state.loading} />
                         </div>}
                     </div>
                 </div>
             </div>
-            {message && <SnackBar message={message} />}
+            {state.message && <SnackBar message={state.message} />}
         </div>
     );
 };
