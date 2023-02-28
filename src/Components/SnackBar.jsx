@@ -17,7 +17,7 @@ const SnackBar = (props) => {
 
     return (
         showSnackbar && (
-            <div id='my-snack-bar'
+            <div id='snack-bar'
                 className={`fixed bottom-4 left-4 text-white p-4 rounded-md ${(color === "green") && "bg-green-700"} ${(color === "red") && "bg-red-700"}`}>
                 <span id='message'>
                     {icon === "success" && <CheckIcon />}

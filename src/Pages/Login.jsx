@@ -1,6 +1,7 @@
+import { AUTH_FAIL, AUTH_PROCESS, AUTH_SUCCESS, CLEAN_MESSAGE, CLEAN_STATES, INITIAL_STATE, OTP_FAIL, loginReducer } from "../Hooks/loginReducer";
 import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
-import React, { useContext, useState } from "react";
+import React, { useContext, useReducer, useState } from "react";
 import { RecaptchaVerifier, signInWithEmailAndPassword, signInWithPhoneNumber } from "firebase/auth";
 
 import { AuthContext } from "../Context/Auth";
@@ -11,41 +12,55 @@ import { auth } from "../firebase";
 
 const Login = () => {
     const { currentUser } = useContext(AuthContext);
-
-    const [dialog, setDialog] = useState(false);
-    const [sms, setSMS] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-
-    const [message, setMessage] = useState({ color: "", text: "", icon: "" });
-    const [loading, setLoading] = useState(false);
-    const [user, setUser] = useState({
-        email: "",
-        password: "",
-    });
+    const [state, dispatch] = useReducer(loginReducer, INITIAL_STATE);
+    const [sms, setSms] = useState("");
 
     const authHandler = async () => {
-        const email = user.email;
-        const password = user.password;
-        setLoading(true);
+        const email = state.user.email;
+        const password = state.user.password;
+        dispatch({ type: AUTH_PROCESS, payload: true })
 
         await signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                setMessage({
-                    color: "green",
-                    text: "Successfully logged in",
-                    icon: "success",
-                });
+                dispatch({
+                    type: AUTH_SUCCESS,
+                    payload: {
+                        loading: false,
+                        message: {
+                            color: "green",
+                            text: "Successfully logged in",
+                            icon: "success"
+                        }
+                    }
+                })
                 setTimeout(() => {
                     navigate("/app");
                 }, 2000);
             }).catch(() => {
-                setDialog(false);
-                setLoading(false);
-                setMessage({
-                    color: "red",
-                    text: "Information's are not correct",
-                    icon: "error",
-                });
+                dispatch({
+                    type: AUTH_FAIL,
+                    payload: {
+                        loading: false,
+                        dialogSMS: false,
+                        message: {
+                            color: "red",
+                            text: "Information's are not correct",
+                            icon: "error",
+                        }
+                    }
+                })
+                setTimeout(() => {
+                    dispatch({
+                        type: CLEAN_MESSAGE,
+                        payload: {
+                            message: {
+                                color: "",
+                                text: "",
+                                icon: "",
+                            },
+                        }
+                    })
+                }, 2000);
             })
     }
 
@@ -63,7 +78,7 @@ const Login = () => {
         onCaptchVerify();
 
         const appVerifier = window.recaptchaVerifier;
-        const finalPhoneNumber = "+90" + phoneNumber;
+        const finalPhoneNumber = "+90" + state.user.phoneNumber;
 
         signInWithPhoneNumber(auth, finalPhoneNumber, appVerifier)
             .then((confirmationResult) => {
@@ -79,47 +94,72 @@ const Login = () => {
             .confirm(sms)
             .then(() => { authHandler() })
             .catch(() => {
-                setLoading(false);
-                setDialog(false);
-                setMessage({
-                    color: "red",
-                    text: "SMS code is not correct",
-                    icon: "error",
-                });
+                dispatch({
+                    type: OTP_FAIL,
+                    payload: {
+                        loading: false,
+                        dialogSMS: false,
+                        message: {
+                            color: "red",
+                            text: "SMS code is not correct",
+                            icon: "error",
+                        },
+                    }
+                })
+                setTimeout(() => {
+                    dispatch({
+                        type: CLEAN_MESSAGE,
+                        payload: {
+                            message: {
+                                color: "",
+                                text: "",
+                                icon: "",
+                            },
+                        }
+                    })
+                }, 2000);
             })
     }
 
     const navigate = useNavigate();
     //checks is there any exist user on database. if it is, navigate to app.
     const loginHandler = async () => {
-        const email = user.email;
-        const password = user.password;
+        const email = state.user.email;
+        const password = state.user.password;
 
-        if (currentUser && (email === "" && password === "" && phoneNumber === "")) {
+        if (currentUser && (email === "" && password === "" && state.user.phoneNumber === "")) {
             navigate("/app");
         } else {
-            if ((phoneNumber.length === 10) && email && password) {
-                setDialog(true);
+            if ((state.user.phoneNumber.length === 10) && email && password) {
+                //setDialog(true);
+                dispatch({ type: "OTP_LOGIN_PROCESS", payload: true })
                 messageSendHandler();
             } else if (email && password) {
                 authHandler();
             } else {
-                setMessage({
-                    color: "red",
-                    text: "Information's are not correct",
-                    icon: "error",
-                });
-                setLoading(false);
+                dispatch({
+                    type: AUTH_FAIL, payload: {
+                        loading: false,
+                        message: {
+                            color: "red",
+                            text: "Information's are not correct",
+                            icon: "error",
+                        }
+                    }
+                })
             }
         }
-
-        setLoading(false);
         setTimeout(() => {
-            setMessage({
-                color: "",
-                text: "",
-                icon: "",
-            });
+            dispatch({
+                type: CLEAN_STATES, payload: {
+                    loading: false,
+                    message: {
+                        color: "",
+                        text: "",
+                        icon: ""
+                    }
+                }
+            })
         }, 2500);
     }
 
@@ -132,17 +172,25 @@ const Login = () => {
                         Login
                     </span>
                     <TextField
+                        name="email"
                         inputProps={{ "data-testid": "email-input" }}
                         margin="normal"
                         id="standard-basic-1"
                         label="E-mail"
                         variant="standard"
-                        value={user.email}
+                        value={state.user.email}
                         onChange={(e) => {
-                            setUser({ ...user, email: e.target.value });
+                            dispatch({
+                                type: "SET_USER",
+                                payload: {
+                                    name: e.target.name,
+                                    value: e.target.value,
+                                }
+                            })
                         }}
                     />
                     <TextField
+                        name="password"
                         inputProps={{ "data-testid": "password-input" }}
                         margin="normal"
                         id="password-standard-basic-2"
@@ -151,18 +199,33 @@ const Login = () => {
                         autoComplete="current-password"
                         variant="standard"
                         onChange={(e) => {
-                            setUser({ ...user, password: e.target.value });
+                            /* setUser({ ...user, password: e.target.value }); */
+                            dispatch({
+                                type: "SET_USER",
+                                payload: {
+                                    name: e.target.name,
+                                    value: e.target.value,
+                                }
+                            })
                         }}
                     />
                     <div className="mt-4 flex flex-col border-2 border-gray-500 rounded-lg py-4 px-6 max-sm:px-2 max-sm:py-2">
                         <span className="font-bold">Login with SMS verification (optional)</span>
                         <TextField
+                            name="phoneNumber"
                             margin="normal"
                             id="phone-standard-basic-3"
                             label="Phone Number"
                             variant="standard"
                             onChange={(e) => {
-                                setPhoneNumber(e.target.value);
+                                /* setUser({ ...user, phoneNumber: e.target.value }); */
+                                dispatch({
+                                    type: "SET_USER",
+                                    payload: {
+                                        name: e.target.name,
+                                        value: e.target.value,
+                                    }
+                                })
                             }} />
                     </div>
                     <Button
@@ -183,7 +246,7 @@ const Login = () => {
                         </Link>
                     </span>
                     <div data-testid="loading-wrapper">
-                        <Loading loading={loading} />
+                        <Loading loading={state.loading} />
                     </div>
                 </div>
             </div>
@@ -191,8 +254,8 @@ const Login = () => {
                 <span className="mr-1">Created By : Altar Ulas |</span>
                 <span>linkedin.com/in/ismail-altar-ulas/</span>
             </div>
-            {message && <SnackBar message={message} />}
-            {dialog && <SMSDialog setSMS={setSMS} OTPHandler={OTPHandler} />}
+            {state.message && <SnackBar message={state.message} />}
+            {state.dialogSMS && <SMSDialog setSms={setSms} OTPHandler={OTPHandler} />}
             <div id="recaptcha-container"></div>
         </div >
     );

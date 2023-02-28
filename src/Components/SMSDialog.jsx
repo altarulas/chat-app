@@ -11,7 +11,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 export default function SMSDialog(props) {
-    const { setSMS, OTPHandler } = props;
+    const { setSms, OTPHandler } = props;
+
     const [countdown, setCountdown] = React.useState(90);
     const [open, setOpen] = React.useState(true);
 
@@ -28,6 +29,7 @@ export default function SMSDialog(props) {
 
         return () => clearInterval(interval);
     }, [countdown]);
+
 
     const handleClose = () => {
         setOpen(false);
@@ -46,7 +48,7 @@ export default function SMSDialog(props) {
                         <span>Enter your SMS code</span>
                         <span className='ml-2'>({countdown})</span>
                     </div>
-                    <CloseIcon onClick={handleClose} sx={{ marginTop: "4px", marginLeft: "20px" }} />
+                    <CloseIcon onClick={handleClose} sx={{ marginTop: "4px", marginLeft: "20px", cursor: "pointer" }} />
                 </div>
                 <div className='pt-4 pb-8 px-8 flex items-center'>
                     <TextField
@@ -56,7 +58,7 @@ export default function SMSDialog(props) {
                         label="Enter SMS code"
                         variant="standard"
                         onChange={(e) => {
-                            setSMS(e.target.value);
+                            setSms(e.target.value);
                         }}
                     />
                     <Button
