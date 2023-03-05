@@ -13,22 +13,19 @@ export const INITIAL_STATE = {
     }
 }
 
-export const AUTH_PROCESS = "AUTH_PROCESS";
 export const SET_USER = "SET_USER";
+
+export const AUTH_PROCESS = "AUTH_PROCESS";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAIL = "AUTH_FAIL";
+
 export const OTP_LOGIN_PROCESS = "OTP_LOGIN_PROCESS";
 export const OTP_FAIL = "OTP_FAIL";
-export const CLEAN_STATES = "CLEAN_STATES";
-export const CLEAN_MESSAGE = "CLEAN_MESSAGE";
+
+export const MISSING_INPUTS = "MISSING_INPUTS";
 
 export const loginReducer = (state, action) => {
     switch (action.type) {
-        case AUTH_PROCESS:
-            return {
-                ...state,
-                loading: action.payload,
-            }
         case SET_USER:
             return {
                 ...state,
@@ -37,41 +34,57 @@ export const loginReducer = (state, action) => {
                     [action.payload.name]: action.payload.value,
                 },
             }
+        case AUTH_PROCESS:
+            return {
+                ...state,
+                loading: true,
+            }
         case AUTH_SUCCESS:
             return {
                 ...state,
-                loading: action.payload.loading,
-                message: action.payload.message,
+                loading: false,
+                message: {
+                    color: "green",
+                    text: "Successfully logged in",
+                    icon: "success"
+                }
             }
         case AUTH_FAIL:
             return {
                 ...state,
-                loading: action.payload.loading,
-                dialogSMS: action.payload.dialogSMS,
-                message: action.payload.message,
+                loading: false,
+                dialogSMS: false,
+                message: {
+                    color: "red",
+                    text: "Information's are not correct",
+                    icon: "error",
+                }
             }
         case OTP_LOGIN_PROCESS:
             return {
                 ...state,
-                dialogSMS: action.payload,
+                dialogSMS: true,
             }
         case OTP_FAIL:
             return {
                 ...state,
-                dialogSMS: action.payload.dialogSMS,
-                loading: action.payload.loading,
-                message: action.payload.message,
+                loading: false,
+                dialogSMS: false,
+                message: {
+                    color: "red",
+                    text: "SMS code is not correct",
+                    icon: "error",
+                },
             }
-        case CLEAN_STATES:
+        case MISSING_INPUTS:
             return {
                 ...state,
-                loading: action.payload.loading,
-                message: action.payload.message,
-            }
-        case CLEAN_MESSAGE:
-            return {
-                ...state,
-                message: action.payload.message,
+                loading: false,
+                message: {
+                    color: "orange",
+                    text: "Please fill the inputs",
+                    icon: "warning"
+                }
             }
 
         default: return state;

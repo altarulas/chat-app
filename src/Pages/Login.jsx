@@ -1,4 +1,4 @@
-import { AUTH_FAIL, AUTH_PROCESS, AUTH_SUCCESS, CLEAN_MESSAGE, CLEAN_STATES, INITIAL_STATE, OTP_FAIL, SET_USER, loginReducer } from "../Hooks/loginReducer";
+import { AUTH_FAIL, AUTH_PROCESS, AUTH_SUCCESS, INITIAL_STATE, MISSING_INPUTS, OTP_FAIL, OTP_LOGIN_PROCESS, SET_USER, loginReducer } from "../Hooks/loginReducer";
 import { Button, TextField } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useContext, useReducer, useState } from "react";
@@ -18,49 +18,17 @@ const Login = () => {
     const authHandler = async () => {
         const email = state.user.email;
         const password = state.user.password;
-        dispatch({ type: AUTH_PROCESS, payload: true })
+
+        dispatch({ type: AUTH_PROCESS })
 
         await signInWithEmailAndPassword(auth, email, password)
             .then(() => {
-                dispatch({
-                    type: AUTH_SUCCESS,
-                    payload: {
-                        loading: false,
-                        message: {
-                            color: "green",
-                            text: "Successfully logged in",
-                            icon: "success"
-                        }
-                    }
-                })
+                dispatch({ type: AUTH_SUCCESS })
                 setTimeout(() => {
                     navigate("/app");
                 }, 2000);
             }).catch(() => {
-                dispatch({
-                    type: AUTH_FAIL,
-                    payload: {
-                        loading: false,
-                        dialogSMS: false,
-                        message: {
-                            color: "red",
-                            text: "Information's are not correct",
-                            icon: "error",
-                        }
-                    }
-                })
-                setTimeout(() => {
-                    dispatch({
-                        type: CLEAN_MESSAGE,
-                        payload: {
-                            message: {
-                                color: "",
-                                text: "",
-                                icon: "",
-                            },
-                        }
-                    })
-                }, 2000);
+                dispatch({ type: AUTH_FAIL })
             })
     }
 
@@ -94,30 +62,7 @@ const Login = () => {
             .confirm(sms)
             .then(() => { authHandler() })
             .catch(() => {
-                dispatch({
-                    type: OTP_FAIL,
-                    payload: {
-                        loading: false,
-                        dialogSMS: false,
-                        message: {
-                            color: "red",
-                            text: "SMS code is not correct",
-                            icon: "error",
-                        },
-                    }
-                })
-                setTimeout(() => {
-                    dispatch({
-                        type: CLEAN_MESSAGE,
-                        payload: {
-                            message: {
-                                color: "",
-                                text: "",
-                                icon: "",
-                            },
-                        }
-                    })
-                }, 2000);
+                dispatch({ type: OTP_FAIL })
             })
     }
 
@@ -132,35 +77,14 @@ const Login = () => {
         } else {
             if ((state.user.phoneNumber.length === 10) && email && password) {
                 //setDialog(true);
-                dispatch({ type: "OTP_LOGIN_PROCESS", payload: true })
+                dispatch({ type: OTP_LOGIN_PROCESS })
                 messageSendHandler();
             } else if (email && password) {
                 authHandler();
             } else {
-                dispatch({
-                    type: AUTH_FAIL, payload: {
-                        loading: false,
-                        message: {
-                            color: "red",
-                            text: "Information's are not correct",
-                            icon: "error",
-                        }
-                    }
-                })
+                dispatch({ type: MISSING_INPUTS })
             }
         }
-        setTimeout(() => {
-            dispatch({
-                type: CLEAN_STATES, payload: {
-                    loading: false,
-                    message: {
-                        color: "",
-                        text: "",
-                        icon: ""
-                    }
-                }
-            })
-        }, 2500);
     }
 
     return (

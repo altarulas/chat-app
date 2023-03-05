@@ -13,19 +13,17 @@ export const INITIAL_STATE = {
     }
 }
 
-export const REGISTER_PROCESS = "REGISTER_PROCESS";
 export const SET_USER = "SET_USER";
+export const REGISTER_PROCESS = "REGISTER_PROCESS";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
-export const REGISTER_FAIL = "REGISTER_FAIL";
-export const CLEAN_STATES = "CLEAN_STATES";
+
+export const IMAGE_UPLOAD_FAIL = "IMAGE_UPLOAD_FAIL";
+export const VALIDATION_FAIL = "VALIDATION_FAIL";
+export const MISSING_INPUTS = "MISSING_INPUTS";
+export const IMAGE_NOT_EXIST = "IMAGE_NOT_EXIST";
 
 export const registerReducer = (state, action) => {
     switch (action.type) {
-        case REGISTER_PROCESS:
-            return {
-                ...state,
-                loading: action.payload,
-            }
         case SET_USER:
             return {
                 ...state,
@@ -34,23 +32,60 @@ export const registerReducer = (state, action) => {
                     [action.payload.name]: action.payload.value,
                 },
             }
+        case REGISTER_PROCESS:
+            return {
+                ...state,
+                loading: true,
+            }
         case REGISTER_SUCCESS:
             return {
                 ...state,
-                loading: action.payload.loading,
-                message: action.payload.message,
+                loading: false,
+                message: {
+                    color: "green",
+                    text: "Successfully registered",
+                    icon: "success",
+                }
             }
-        case REGISTER_FAIL:
+        case IMAGE_UPLOAD_FAIL:
             return {
                 ...state,
-                loading: action.payload.loading,
-                message: action.payload.message,
+                loading: false,
+                message: {
+                    color: "red",
+                    text: "Image failed to upload",
+                    icon: "error",
+                }
             }
-        case CLEAN_STATES:
+        case VALIDATION_FAIL:
             return {
                 ...state,
-                loading: action.payload.loading,
-                message: action.payload.message,
+                loading: false,
+                message: {
+                    color: "red",
+                    text: "Information's are not valid",
+                    icon: "error",
+                }
+            }
+        case MISSING_INPUTS:
+            return {
+                ...state,
+                loading: false,
+                message: {
+                    color: "orange",
+                    text: "Please fill the inputs",
+                    icon: "warning",
+                }
+            }
+        case IMAGE_NOT_EXIST:
+            return {
+                ...state,
+                loading: false,
+                message: {
+                    color: "orange",
+                    text: "Please upload an image",
+                    icon: "warning",
+                }
             }
 
         default: return state;
