@@ -11,7 +11,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 import { AuthContext } from "../Context/Auth";
 import { ChatContext } from "../Context/Chat";
-import Img from "../Images/img.png";
+import Img from "../Utility/Images/img.png";
 import { v4 as uuid } from "uuid";
 
 const Input = () => {
