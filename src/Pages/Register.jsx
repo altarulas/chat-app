@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import { CLEAN_STATES, INITIAL_STATE, REGISTER_FAIL, REGISTER_PROCESS, REGISTER_SUCCESS, SET_USER, registerReducer } from "../Hooks/registerReducer";
+import { IMAGE_NOT_EXIST, IMAGE_UPLOAD_FAIL, INITIAL_STATE, MISSING_INPUTS, REGISTER_PROCESS, REGISTER_SUCCESS, SET_USER, VALIDATION_FAIL, registerReducer } from "../Hooks/registerReducer";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -17,7 +17,6 @@ const Register = () => {
     const [state, dispatch] = useReducer(registerReducer, INITIAL_STATE);
 
     const handleImageChange = (e) => {
-        /* setUser({ ...user, image: e.target.files[0] }); */
         dispatch({
             type: SET_USER,
             payload: {
@@ -38,7 +37,7 @@ const Register = () => {
         const image = state.user.image
 
         if (image) {
-            dispatch({ type: REGISTER_PROCESS, payload: true });
+            dispatch({ type: REGISTER_PROCESS });
             // Creates user 
             if (displayName && email && password) {
                 try {
@@ -67,16 +66,7 @@ const Register = () => {
                                 await setDoc(doc(db, "userChats", response.user.uid), {})
 
                                 setTimeout(() => {
-                                    dispatch({
-                                        type: REGISTER_SUCCESS, payload: {
-                                            loading: false,
-                                            message: {
-                                                color: "green",
-                                                text: "Successfully registered",
-                                                icon: "success",
-                                            }
-                                        }
-                                    })
+                                    dispatch({ type: REGISTER_SUCCESS })
                                 }, 500)
 
                                 setTimeout(() => {
@@ -84,68 +74,19 @@ const Register = () => {
                                 }, 2000)
 
                             } catch {
-                                dispatch({
-                                    type: REGISTER_FAIL, payload: {
-                                        loading: false,
-                                        message: {
-                                            color: "red",
-                                            text: "Image failed to upload",
-                                            icon: "error",
-                                        }
-                                    }
-                                })
+                                dispatch({ type: IMAGE_UPLOAD_FAIL })
                             }
                         });
                     });
                 } catch {
-                    dispatch({
-                        type: REGISTER_FAIL, payload: {
-                            loading: false,
-                            message: {
-                                color: "red",
-                                text: "Information's are not valid or something went wrong",
-                                icon: "error",
-                            }
-                        }
-                    })
+                    dispatch({ type: VALIDATION_FAIL })
                 }
             } else {
-                dispatch({
-                    type: REGISTER_FAIL, payload: {
-                        loading: false,
-                        message: {
-                            color: "red",
-                            text: "Missing inputs",
-                            icon: "error",
-                        }
-                    }
-                })
+                dispatch({ type: MISSING_INPUTS })
             }
         } else {
-            dispatch({
-                type: REGISTER_FAIL, payload: {
-                    loading: false,
-                    message: {
-                        color: "red",
-                        text: "Image failed to upload or there is no image",
-                        icon: "error",
-                    }
-                }
-            })
+            dispatch({ type: IMAGE_NOT_EXIST })
         }
-
-        setTimeout(() => {
-            dispatch({
-                type: CLEAN_STATES, payload: {
-                    loading: false,
-                    message: {
-                        color: "",
-                        text: "",
-                        icon: "",
-                    }
-                }
-            })
-        }, 2000)
     }
 
     return (
