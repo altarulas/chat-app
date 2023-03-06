@@ -14,7 +14,7 @@ const Login = () => {
     const { currentUser } = useContext(AuthContext);
     const [state, dispatch] = useReducer(loginReducer, INITIAL_STATE);
     const [sms, setSms] = useState("");
-
+    // new changes
     const authHandler = async () => {
         const email = state.user.email;
         const password = state.user.password;
