@@ -1,6 +1,8 @@
 import Chat from "../Components/Chat"
 import SideBar from "../Components/SideBar"
 
+// dummy text
+
 const AppScreen = () => {
     return (
         <div id="app-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center">
