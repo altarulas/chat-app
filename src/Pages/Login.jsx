@@ -88,61 +88,24 @@ const Login = () => {
     }
 
     return (
-        <div id="login-base" className="w-screen h-screen bg-indigo-500 flex items-center justify-center flex-col">
-            <span id="title" className="mb-8 font-semibold text-4xl text-gray-200 max-sm:text-2xl">Welcome to Chat App</span>
-            <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
-                <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
-                    <span className="text-center font-semibold text-3xl my-2 max-sm:text-2xl">
-                        Login
-                    </span>
-                    <TextField
-                        name="email"
-                        inputProps={{ "data-testid": "email-input" }}
-                        margin="normal"
-                        id="standard-basic-1"
-                        label="E-mail"
-                        variant="standard"
-                        value={state.user.email}
-                        onChange={(e) => {
-                            dispatch({
-                                type: SET_USER,
-                                payload: {
-                                    name: e.target.name,
-                                    value: e.target.value,
-                                }
-                            })
-                        }}
-                    />
-                    <TextField
-                        name="password"
-                        inputProps={{ "data-testid": "password-input" }}
-                        margin="normal"
-                        id="password-standard-basic-2"
-                        label="Password"
-                        type="password"
-                        autoComplete="current-password"
-                        variant="standard"
-                        onChange={(e) => {
-                            /* setUser({ ...user, password: e.target.value }); */
-                            dispatch({
-                                type: SET_USER,
-                                payload: {
-                                    name: e.target.name,
-                                    value: e.target.value,
-                                }
-                            })
-                        }}
-                    />
-                    <div className="mt-4 flex flex-col border-2 border-gray-500 rounded-lg py-4 px-6 max-sm:px-2 max-sm:py-2">
-                        <span className="font-bold">Login with SMS verification (optional)</span>
+        <div className="py-10 w-full min-h-screen bg-indigo-500 flex flex-col items-center gap-10 justify-center md:flex-row">
+
+            <div id="login-base" className=" flex items-center justify-center flex-col">
+                <span id="title" className="mb-8 font-semibold text-4xl text-gray-200 max-sm:text-2xl">Welcome to Chat App</span>
+                <div id="login-form" className="w-108 bg-white rounded-md p-4 max-sm:w-80">
+                    <div id="form-wrapper" className="flex flex-col w-full h-full px-16 max-sm:px-6">
+                        <span className="text-center font-semibold text-3xl my-2 max-sm:text-2xl">
+                            Login
+                        </span>
                         <TextField
-                            name="phoneNumber"
+                            name="email"
+                            inputProps={{ "data-testid": "email-input" }}
                             margin="normal"
-                            id="phone-standard-basic-3"
-                            label="Phone Number"
+                            id="standard-basic-1"
+                            label="E-mail"
                             variant="standard"
+                            value={state.user.email}
                             onChange={(e) => {
-                                /* setUser({ ...user, phoneNumber: e.target.value }); */
                                 dispatch({
                                     type: SET_USER,
                                     payload: {
@@ -150,38 +113,94 @@ const Login = () => {
                                         value: e.target.value,
                                     }
                                 })
-                            }} />
+                            }}
+                        />
+                        <TextField
+                            name="password"
+                            inputProps={{ "data-testid": "password-input" }}
+                            margin="normal"
+                            id="password-standard-basic-2"
+                            label="Password"
+                            type="password"
+                            autoComplete="current-password"
+                            variant="standard"
+                            onChange={(e) => {
+                                /* setUser({ ...user, password: e.target.value }); */
+                                dispatch({
+                                    type: SET_USER,
+                                    payload: {
+                                        name: e.target.name,
+                                        value: e.target.value,
+                                    }
+                                })
+                            }}
+                        />
+                        <div className="mt-4 flex flex-col border-2 border-gray-500 rounded-lg py-4 px-6 max-sm:px-2 max-sm:py-2">
+                            <span className="font-bold">Login with SMS verification (optional)</span>
+                            <TextField
+                                name="phoneNumber"
+                                margin="normal"
+                                id="phone-standard-basic-3"
+                                label="Phone Number"
+                                variant="standard"
+                                onChange={(e) => {
+                                    /* setUser({ ...user, phoneNumber: e.target.value }); */
+                                    dispatch({
+                                        type: SET_USER,
+                                        payload: {
+                                            name: e.target.name,
+                                            value: e.target.value,
+                                        }
+                                    })
+                                }} />
+                        </div>
+                        <Button
+                            data-testid="login"
+                            color="secondary"
+                            onClick={loginHandler}
+                            style={{ marginTop: "24px" }}
+                            variant="contained">
+                            LOGIN
+                        </Button>
+                        <span className="text-base mt-8 mb-4 text-center">
+                            Don't you have an account?
+                            <Link
+                                className="font-bold max-sm:flex max-sm:justify-center"
+                                to="/register"
+                                style={{ textDecoration: "none", marginLeft: "7px" }}>
+                                Click Here
+                            </Link>
+                        </span>
+                        <div data-testid="loading-wrapper">
+                            <Loading loading={state.loading} />
+                        </div>
                     </div>
-                    <Button
-                        data-testid="login"
-                        color="secondary"
-                        onClick={loginHandler}
-                        style={{ marginTop: "24px" }}
-                        variant="contained">
-                        LOGIN
-                    </Button>
-                    <span className="text-base mt-8 mb-4 text-center">
-                        Don't you have an account?
-                        <Link
-                            className="font-bold max-sm:flex max-sm:justify-center"
-                            to="/register"
-                            style={{ textDecoration: "none", marginLeft: "7px" }}>
-                            Click Here
-                        </Link>
-                    </span>
-                    <div data-testid="loading-wrapper">
-                        <Loading loading={state.loading} />
+                </div>
+                <div className="text-gray-300 mt-4 flex items-center max-sm:mt-2 max-sm:flex-row max-sm:text-xs">
+                    <span className="mr-1">Created By : Altar Ulas |</span>
+                    <span>linkedin.com/in/ismail-altar-ulas/</span>
+                </div>
+                {state.message && <SnackBar message={state.message} />}
+                {state.dialogSMS && <SMSDialog setSms={setSms} OTPHandler={OTPHandler} />}
+                <div id="recaptcha-container"></div>
+            </div >
+
+            <div className="bg-white rounded-lg p-4 flex flex-col items-center justify-center h-fit w-fit gap-4">
+                <h1 className="text-black text-base md:text-lg border-b-2">Sample Account</h1>
+                <div className="flex flex-col items-center">
+                    <span className="text-black text-md">adam@gmail.com</span>
+                    <span className="text-black text-md">123asd123</span>
+                </div>
+                <div>
+                    <h2 className="text-black text-base border-b-2">Users you can chat</h2>
+                    <div className="flex flex-col items-center">
+                        <span className="text-black text-md">Lucy</span>
+                        <span className="text-black text-md">Ahmet</span>
+                        <span className="text-black text-md">Lisa</span>
                     </div>
                 </div>
             </div>
-            <div className="text-gray-300 mt-4 flex items-center max-sm:mt-2 max-sm:flex-row max-sm:text-xs">
-                <span className="mr-1">Created By : Altar Ulas |</span>
-                <span>linkedin.com/in/ismail-altar-ulas/</span>
-            </div>
-            {state.message && <SnackBar message={state.message} />}
-            {state.dialogSMS && <SMSDialog setSms={setSms} OTPHandler={OTPHandler} />}
-            <div id="recaptcha-container"></div>
-        </div >
+        </div>
     );
 };
 
